@@ -1,31 +1,35 @@
-export class Ship {
+export class Ship extends EventTarget {
   #name = undefined;
-  #length = undefined;
+  #size = undefined;
   #timesHit = 0;
+  #onHitEvent = undefined;
 
-  constructor(name, length) {
-    if (name === undefined || length === undefined)
-      throw new Error("Name and length are required");
+  constructor(name, size) {
+    super();
+    if (name === undefined || size === undefined)
+      throw new Error("Name and size are required");
 
     this.#name = name;
-    this.#length = length;
+    this.#size = size;
+    this.#onHitEvent = new Event("onHit");
   }
 
-  get Name() {
+  get name() {
     return this.#name;
   }
-  get Length() {
-    return this.#length;
+  get size() {
+    return this.#size;
   }
-  get TimesHit() {
+  get timesHit() {
     return this.#timesHit;
   }
 
   hit() {
     this.#timesHit++;
+    this.dispatchEvent(this.#onHitEvent);
   }
 
   isSunk() {
-    return this.#timesHit >= this.#length;
+    return this.#timesHit >= this.#size;
   }
 }
