@@ -7,29 +7,40 @@ export class Gameboard {
   #ships = [];
 
   constructor() {
+    this.#buildBoard();
+  }
+
+  #buildBoard() {
     for (let i = 0; i < this.#size; i++) {
       const x = [];
       for (let j = 0; j < this.#size; j++) {
-        x.push(j);
+        x.push(new Position());
       }
+      this.#positions.push(x);
     }
   }
 
   #assessFleetDamage() {
-    let allSunk = false;
-    //TODO: ASSESS IF ALL SHIPS ARE SUNK
+    let allSunk = true;
+    for (let i = 0; i < this.#ships.length; i++) {
+      const ship = this.#ships[i];
+      if (!ship.isSunk()) {
+        allSunk = false;
+        break;
+      }
+    }
+
+    return allSunk;
   }
 
   placeShip(ship, pos, axis) {
-    if (this.#ships.includes(ship)) return false;
-
     const [x, y] = pos;
     if (!this.#isValidCoordinate(x) || !this.#isValidCoordinate(y))
       return false;
 
     const [endX, endY] = [
-      x + axis === Axis.horizontal ? ship.size : 0,
-      y + axis === Axis.vertical ? ship.size : 0,
+      x + (axis === Axis.horizontal ? ship.size : 0),
+      y + (axis === Axis.vertical ? ship.size : 0),
     ];
 
     if (!this.#isValidCoordinate(endX) || !this.#isValidCoordinate(endY))
@@ -37,17 +48,17 @@ export class Gameboard {
 
     let collisionedWithExisting = false;
     if (axis === Axis.horizontal) {
-      for (let i = x; i <= endX; i++) {
+      for (let i = x; i < endX; i++) {
         const boardPos = this.#positions[i][y];
-        if (boardPos.ship !== undefined) {
+        if (boardPos.ship !== null) {
           collisionedWithExisting = true;
           break;
         }
       }
     } else {
-      for (let i = y; i <= endY; i++) {
+      for (let i = y; i < endY; i++) {
         const boardPos = this.#positions[x][i];
-        if (boardPos.ship !== undefined) {
+        if (boardPos.ship !== null) {
           collisionedWithExisting = true;
           break;
         }
@@ -57,18 +68,18 @@ export class Gameboard {
     if (collisionedWithExisting) return false;
 
     if (axis === Axis.horizontal) {
-      for (let i = x; i <= endX; i++) {
+      for (let i = x; i < endX; i++) {
         const boardPos = this.#positions[i][y];
         boardPos.assignShip(ship);
       }
     } else {
-      for (let i = y; i <= endY; i++) {
+      for (let i = y; i < endY; i++) {
         const boardPos = this.#positions[x][i];
         boardPos.assignShip(y);
       }
     }
 
-    ship.addEventListener("onHit", this.#assessFleetDamage());
+    ship.addEventListener("onHit", () => this.#assessFleetDamage());
     this.#ships.push(ship);
     return true;
   }
@@ -79,7 +90,7 @@ export class Gameboard {
 
     const [x, y] = coordinates;
     const pos = this.#positions[x][y];
-    if (pos.ship === undefined) return false;
+    if (pos.ship === null) return false;
 
     pos.ship.hit();
     return true;
@@ -91,7 +102,7 @@ export class Gameboard {
 }
 
 class Position {
-  #ship = undefined;
+  #ship = null;
   get ship() {
     return this.#ship;
   }

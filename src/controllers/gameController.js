@@ -5,19 +5,19 @@ export class GameController {
   #player1 = undefined;
   #player2 = undefined;
 
-  constructor(gameMode) {
-    switch (gameMode) {
-      case GameMode.single:
-        break;
-      case GameMode.pvp:
-        break;
-      default:
-        return;
-    }
+  constructor() {}
+
+  start(gameMode, player1, player2 = undefined) {
+    const isCPU = gameMode === GameMode.pvp ? false : true;
+
+    this.#player1 = new Player(player1);
+    this.#player2 = new Player(player2, isCPU);
+
+    this.#startFleetSelection();
   }
 
-  start() {
-    this.#player1 = new Player("Cesar");
-    this.#player2 = new Player("Abraham");
+  #startFleetSelection() {
+    this.#player1.placeFleet();
+    this.#player2.placeFleet();
   }
 }

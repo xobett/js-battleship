@@ -5,7 +5,11 @@ export class PlayerController {
   gameboard = undefined;
   fleet = undefined;
 
-  placeFleet() {}
+  placeFleet() {
+    
+  }
+
+  placeFleetRandom() {}
 
   attack(pos) {
     this.gameboard.receiveAttack(pos);
