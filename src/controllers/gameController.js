@@ -9,6 +9,7 @@ export class GameController {
 
   start(gameMode, player1, player2 = undefined) {
     const isCPU = gameMode === GameMode.pvp ? false : true;
+    player2 = isCPU ? "CPU" : player2;
 
     this.#player1 = new Player(player1);
     this.#player2 = new Player(player2, isCPU);

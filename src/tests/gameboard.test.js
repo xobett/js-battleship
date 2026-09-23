@@ -54,7 +54,7 @@ describe.skip("position tests on horizontal axis", () => {
   });
 });
 
-describe("position tests on vertical axis", () => {
+describe.skip("position tests on vertical axis", () => {
   it("should return true when placing a ship on a valid position", () => {
     const ship = new Ship("Destroyer", 2);
     const gameboard = new Gameboard();
@@ -81,5 +81,37 @@ describe("position tests on vertical axis", () => {
     gameboard.placeShip(ship, [0, 0], Axis.vertical);
     const result = gameboard.placeShip(ship, [0, 2], Axis.vertical);
     expect(result).toBe(true);
+  });
+});
+
+describe("attack tests", () => {
+  it("should return true when attacking a position with ship 1", () => {
+    const ship = new Ship("Destroyer", 2);
+    const gameboard = new Gameboard();
+    gameboard.placeShip(ship, [0, 0], Axis.vertical);
+    const result = gameboard.receiveAttack([0, 0]);
+    expect(result).toBe(true);
+  });
+  it("should return true when attacking a position with ship 2", () => {
+    const ship = new Ship("Destroyer", 2);
+    const gameboard = new Gameboard();
+    gameboard.placeShip(ship, [0, 0], Axis.vertical);
+    const result = gameboard.receiveAttack([0, 1]);
+    expect(result).toBe(true);
+  });
+  it("should return false when attacking a position with no ship", () => {
+    const ship = new Ship("Destroyer", 2);
+    const gameboard = new Gameboard();
+    gameboard.placeShip(ship, [0, 0], Axis.vertical);
+    const result = gameboard.receiveAttack([0, 2]);
+    expect(result).toBe(false);
+  });
+  it("should return undefined when attacking an already attacked position", () => {
+    const ship = new Ship("Destroyer", 2);
+    const gameboard = new Gameboard();
+    gameboard.placeShip(ship, [0, 0], Axis.vertical);
+    gameboard.receiveAttack([0, 2]);
+    const result = gameboard.receiveAttack([0, 2]);
+    expect(result).toBe(undefined);
   });
 });

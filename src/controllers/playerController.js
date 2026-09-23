@@ -6,10 +6,18 @@ export class PlayerController {
   fleet = undefined;
 
   placeFleet() {
-    
+    this.fleet.forEach((s) => {
+      this.gameboard.randomlyPlaceShip(s);
+    });
+    this.gameboard.printBoard();
   }
 
-  placeFleetRandom() {}
+  randomlyPlaceFleet() {
+    this.fleet.forEach((s) => {
+      this.gameboard.randomlyPlaceShip(s);
+    });
+    this.gameboard.printBoard();
+  }
 
   attack(pos) {
     this.gameboard.receiveAttack(pos);

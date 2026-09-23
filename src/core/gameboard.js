@@ -1,4 +1,4 @@
-import { Axis } from "../enums/axis";
+import { Axis } from "../enums/axis.js";
 
 export class Gameboard {
   #size = 10;
@@ -75,7 +75,7 @@ export class Gameboard {
     } else {
       for (let i = y; i < endY; i++) {
         const boardPos = this.#positions[x][i];
-        boardPos.assignShip(y);
+        boardPos.assignShip(ship);
       }
     }
 
@@ -84,9 +84,39 @@ export class Gameboard {
     return true;
   }
 
+  randomlyPlaceShip(ship) {
+    let placed = false;
+    while (!placed) {
+      const [randomX, randomY] = [this.#getRandomPos(), this.#getRandomPos()];
+      const randomPos = [randomX, randomY];
+      const randomAxis = this.#getRandomAxis();
+      console.log(randomAxis);
+
+      // TODO:
+      // CHECK IF ITS CORRECTLY PLACING VERTICALLY OR HORIZONTALLY
+
+      const result = this.placeShip(ship, randomPos, randomAxis);
+      if (result) placed = true;
+    }
+  }
+
+  #getRandomPos() {
+    return Math.floor(Math.random() * (9 - 0 + 1)) + 0;
+  }
+
+  #getRandomAxis() {
+    const random = this.#getRandomPos();
+    return random % 2 == 0 ? Axis.horizontal : Axis.vertical;
+  }
+
   receiveAttack(coordinates) {
-    if (this.#attackedPositions.includes(coordinates)) return;
+    if (
+      this.#attackedPositions.some((c) => this.#hasCoordinates(c, coordinates))
+    )
+      return;
+
     this.#attackedPositions.push(coordinates);
+    console.log(...this.#attackedPositions.values());
 
     const [x, y] = coordinates;
     const pos = this.#positions[x][y];
@@ -96,8 +126,21 @@ export class Gameboard {
     return true;
   }
 
+  #hasCoordinates(c, coordinates) {
+    return c[0] === coordinates[0] && c[1] === coordinates[1];
+  }
+
   #isValidCoordinate(x) {
     return x >= 0 && x <= this.#size - 1;
+  }
+
+  printBoard() {
+    for (let i = this.#positions.length - 1; i >= 0; i--) {
+      const x = this.#positions[i];
+      console.log(
+        `Row ${i}  ${x.map((y) => (y.ship ? y.ship.name : " ")).join(",")} \n`,
+      );
+    }
   }
 }
 

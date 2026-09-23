@@ -13,7 +13,7 @@ export class Player {
 
   placeFleet() {
     if (this.#isCPU) {
-      this.controller.placeFleetRandom();
+      this.controller.randomlyPlaceFleet();
     } else {
       this.controller.placeFleet();
     }
