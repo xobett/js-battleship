@@ -1,0 +1,46 @@
+button {
+  background: none;
+  border: none;
+  color: inherit;
+
+  cursor: pointer;
+}
+
+.btn {
+  border-radius: 10px;
+  border: 1px solid var(--clr-white);
+  padding-inline: 10px;
+  padding-block: 5px;
+
+  transition:
+    background-color 0.2s ease-in-out,
+    transform 0.1s ease-in-out;
+  transform-origin: center;
+
+  --bck-clr: unset;
+}
+
+.btn:hover {
+  background-color: var(--bckg-clr, #ffffff63);
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn[data-bckg-clr="deep-pink"] {
+  --bckg-clr: var(--clr-deep-pink);
+}
+.btn[data-bckg-clr="banana-cream"] {
+  --bckg-clr: var(--clr-banana-cream);
+}
+.btn[data-bckg-clr="deep-sky-blue"] {
+  --bckg-clr: var(--clr-deep-sky-blue);
+}
+.btn[data-bckg-clr="soft-periwinkle"] {
+  --bckg-clr: var(--clr-soft-periwinkle);
+}
+
+.btn.active {
+  background-color: var(--bckg-clr);
+}

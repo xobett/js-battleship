@@ -10,10 +10,13 @@ export class GameController {
   #gameOver = false;
 
   #players = [];
+  #uiController;
   get players() {
     return this.#players;
   }
-  constructor() {}
+  constructor(uiController) {
+    this.#uiController = uiController;
+  }
 
   start(gameMode, player1, player2 = undefined) {
     const isCPU = gameMode === GameMode.pvp ? false : true;
