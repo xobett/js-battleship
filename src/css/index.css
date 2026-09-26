@@ -1,4 +1,30 @@
+@import url("./custom-fonts.css");
 @import url("./xobett-reset.css");
 @import url("./josh-comeau-reset.css");
 @import url("./variables.css");
 @import url("./components.css");
+@import url("./custom-classes.css");
+@import url("./waves.css");
+
+body {
+  height: 100svh;
+  width: 100svw;
+  background-color: var(--bg);
+  font-family: var(--font-family);
+}
+
+#waves-bg {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 200px;
+}
+
+.game-container {
+  width: 100%;
+  height: 100%;
+  background-color: red;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
