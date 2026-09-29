@@ -16,6 +16,8 @@ export class GameController {
   }
   constructor(uiController) {
     this.#uiController = uiController;
+    this.#uiController.renderPlayerBoard("player-1-board");
+    this.#uiController.renderPlayerBoard("player-2-board");
   }
 
   start(gameMode, player1, player2 = undefined) {
