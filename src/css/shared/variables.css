@@ -2,7 +2,9 @@
   --font-family: black-ops-one-regular, sans-serif, system-ui;
   --wave-clr: #6599e7;
   --txt-clr: #fff;
-  --bg: #e4e6eb;
+  --bg: #bdccee;
   --pos-hvr-clr: #9b7474;
   --pos-act-clr: #fff;
+
+  --icon-size: 2rem;
 }

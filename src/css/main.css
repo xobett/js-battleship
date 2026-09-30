@@ -1,0 +1,23 @@
+@import url("./shared/josh-comeau-reset.css");
+@import url("./shared/xobett-reset.css");
+@import url("./shared/custom-fonts.css");
+@import url("./shared/variables.css");
+@import url("./shared/components.css");
+
+body {
+  height: 100svh;
+  background-color: var(--bg);
+  font-family: var(--font-family);
+  display: flex;
+  flex-direction: column;
+
+  padding-bottom: 100px;
+}
+
+.game-scene {
+  display: none;
+}
+
+.game-scene.active {
+  display: inherit;
+}

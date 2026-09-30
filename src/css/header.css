@@ -1,0 +1,20 @@
+.header-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  place-items: center;
+
+  height: 70px;
+}
+
+.title {
+  font-size: 1.7rem;
+  grid-column: 2;
+}
+
+.github-icon {
+  justify-self: end;
+  margin-right: 40px;
+
+  width: var(--icon-size);
+  height: var(--icon-size);
+}

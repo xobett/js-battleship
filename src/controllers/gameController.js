@@ -16,8 +16,6 @@ export class GameController {
   }
   constructor(uiController) {
     this.#uiController = uiController;
-    this.#uiController.renderPlayerBoard("player-1-board");
-    this.#uiController.renderPlayerBoard("player-2-board");
   }
 
   start(gameMode, player1, player2 = undefined) {
@@ -47,6 +45,12 @@ export class GameController {
     }
 
     this.#announceWinner();
+  }
+
+  static async getPosAndInputAsync() {
+    console.log("waiting for input");
+    const pos = prompt("Assign a position");
+    const axis = prompt("Assign an axis");
   }
 
   #assessPossibleDefeat(opponent) {
