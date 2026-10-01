@@ -1,16 +1,7 @@
-import { Player } from "../core/player.js";
-import { GameMode } from "../enums/gameMode.js";
-
 export class GameController {
-  #activePlayer = undefined;
-  #player1 = undefined;
-  #player2 = undefined;
-
-  #winner = undefined;
-  #gameOver = false;
-
   #players = [];
   #uiController;
+
   get players() {
     return this.#players;
   }
@@ -18,66 +9,24 @@ export class GameController {
     this.#uiController = uiController;
   }
 
-  start(gameMode, player1, player2 = undefined) {
-    const isCPU = gameMode === GameMode.pvp ? false : true;
-    player2 = isCPU ? "CPU" : player2;
-
-    this.#player1 = new Player(player1);
-    this.#player2 = new Player(player2, isCPU);
-
-    this.#startFleetSelection();
-    this.play();
+  init() {
+    this.#assignSceneHandlers();
   }
 
-  play() {
-    this.#activePlayer = this.#player1;
-    while (!this.#gameOver) {
-      const opponent = this.#getOpponentPlayer();
-      const hit = this.#activePlayer.attack(opponent);
-      if (hit) {
-        const defeated = this.#assessPossibleDefeat(opponent);
-        if (defeated) {
-          this.#winner = this.#activePlayer;
-          this.#gameOver = true;
-        }
-      }
-      this.#switchActivePlayer();
-    }
-
-    this.#announceWinner();
+  #assignSceneHandlers() {
+    this.#uiController.IntroScene.addEventListener("click", () => {
+      this.#switchToMenu();
+    });
+    this.#uiController.MenuScene.addEventListener("click", () => {
+      this.#switchToFleetPlacement();
+    });
   }
 
-  static async getPosAndInputAsync() {
-    console.log("waiting for input");
-    const pos = prompt("Assign a position");
-    const axis = prompt("Assign an axis");
+  #switchToMenu() {
+    this.#uiController.loadSceneById("menu-scene");
   }
 
-  #assessPossibleDefeat(opponent) {
-    if (opponent.fleetIsSunk()) return true;
-
-    return false;
-  }
-
-  #announceWinner() {
-    console.log(this.#winner.name + " is the winner!");
-  }
-
-  #getOpponentPlayer() {
-    if (this.#activePlayer === this.#player1) return this.#player2;
-    return this.#player1;
-  }
-
-  #switchActivePlayer() {
-    if (this.#activePlayer === this.#player1) {
-      this.#activePlayer = this.#player2;
-    } else {
-      this.#activePlayer = this.#player1;
-    }
-  }
-
-  #startFleetSelection() {
-    this.#player1.placeFleet();
-    this.#player2.placeFleet();
+  #switchToFleetPlacement() {
+    this.#uiController.loadSceneById("fleet-placement-scene");
   }
 }

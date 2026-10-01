@@ -17,7 +17,3 @@ body {
 .game-scene {
   display: none;
 }
-
-.game-scene.active {
-  display: inherit;
-}
