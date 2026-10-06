@@ -17,9 +17,9 @@ export class GameController {
     this.#uiController.IntroScene.addEventListener("click", () => {
       this.#switchToMenu();
     });
-    this.#uiController.MenuScene.addEventListener("click", () => {
-      this.#switchToFleetPlacement();
-    });
+    // this.#uiController.MenuScene.addEventListener("click", () => {
+    //   this.#switchToFleetPlacement();
+    // });
   }
 
   #switchToMenu() {

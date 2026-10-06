@@ -3,7 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <link
+      rel="shortcut icon"
+      href="./assets/icons/ship.png"
+      type="image/x-icon"
+    />
+    <title>Battleship</title>
   </head>
   <body>
     <svg
@@ -50,13 +55,72 @@
         </svg>
       </ul>
     </nav>
-    <div id="intro-scene" class="game-scene active">
+    <div id="intro-scene" class="game-scene">
       <p>Welcome to Battleship!</p>
       <p>CLICK ANYWHERE TO START!</p>
     </div>
-    <div id="menu-scene" class="game-scene">
-      <p>Welcome to Battleship!</p>
-      <p>THIS IS THE MENU</p>
+    <div id="menu-scene" class="game-scene active">
+      <div class="options-container">
+        <ul>
+          <li>Start Game</li>
+          <li>How to play</li>
+          <li>Return to intro</li>
+        </ul>
+      </div>
+      <div class="avatar-customization-container">
+        <p>Choose your avatar!</p>
+        <div class="avatar-picker-container">
+          <div class="avatar-icon" data-avatar-icon="chaplin">
+            <img
+              src="./assets/icons/actor-chaplin-comedy-svgrepo-com.svg"
+              alt="Chaplin avatar icon"
+            />
+          </div>
+          <div class="avatar-icon" data-avatar-icon="blinky-sheep">
+            <img
+              src="./assets/icons/animal-avatar-mutton-svgrepo-com.svg"
+              alt="Animal avatar icon"
+            />
+          </div>
+          <div class="avatar-icon" data-avatar-icon="spirited-away">
+            <img
+              src="./assets/icons/anime-away-face-svgrepo-com.svg"
+              alt="Anime avatar icon"
+            />
+          </div>
+          <!--I AM THE DANGER SKYLAR, I AM THE ONE WHO KNOCKS!-->
+          <div class="avatar-icon" data-avatar-icon="heinsenberg">
+            <img
+              src="./assets/icons/avatar-bad-breaking-svgrepo-com.svg"
+              alt="Heinsenberg avatar icon"
+            />
+          </div>
+          <div class="avatar-icon" data-avatar-icon="batman">
+            <img
+              src="./assets/icons/avatar-batman-comics-svgrepo-com.svg"
+              alt="Batman avatar icon"
+            />
+          </div>
+          <div class="avatar-icon" data-avatar-icon="killer-cup">
+            <img
+              src="./assets/icons/avatar-coffee-cup-svgrepo-com.svg"
+              alt="Coffee cup avatar icon"
+            />
+          </div>
+          <div class="avatar-icon">
+            <p>Coming soon!</p>
+          </div>
+          <div class="avatar-icon">
+            <p>Coming soon!</p>
+          </div>
+          <div class="avatar-icon" data-avatar-icon="santa-clous">
+            <img
+              src="./assets/icons/christmas-clous-santa-svgrepo-com.svg"
+              alt="Santa clous avatar icon"
+            />
+          </div>
+        </div>
+      </div>
     </div>
     <div id="fleet-selection-scene" class="game-scene">
       <p>Fleet selection</p>
