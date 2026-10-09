@@ -6,30 +6,53 @@
   grid-template-rows: 1fr;
 }
 
-#menu-scene .options-container,
+#menu-scene .options-advice-container,
 #menu-scene .avatar-customization-container {
   width: 100%;
   height: 100%;
 }
 
-#menu-scene .options-container {
+#menu-scene .options-advice-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding-left: 120px;
+  align-items: center;
+  gap: 70px;
 
-  font-size: 1.7rem;
+  font-size: 1.2rem;
+  text-align: center;
 }
 
-.options-container li {
+.advice-container {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  font-size: 0.9rem;
+}
+
+.advice-container p.title {
+  font-size: 1.6rem;
+}
+
+.options-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  z-index: 100;
+}
+
+.options-advice-container span.hoverable {
   position: relative;
 }
 
-.options-container li:hover {
+.options-advice-container span.hoverable:hover {
   cursor: pointer;
 }
 
-.options-container li::before {
+.options-advice-container span.hoverable::before {
   position: absolute;
   content: "-";
   top: 0;
@@ -38,7 +61,7 @@
   transition: transform 0.2s ease;
 }
 
-.options-container li:hover::before {
+.options-advice-container span.hoverable:hover::before {
   transform: translateX(-35px) scale(1);
 }
 
@@ -48,6 +71,14 @@
   justify-content: center;
   align-items: center;
   gap: 20px;
+}
+
+.avatar-customization-container .input-container {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  gap: 10px;
 }
 
 .avatar-picker-container {
@@ -67,9 +98,19 @@
   transition: all 0.2s ease;
 }
 
-.avatar-icon:has(img):hover {
+@keyframes float {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.05);
+  }
+}
+
+#menu-scene .avatar-icon:has(img):hover {
   cursor: pointer;
-  transform: scale(1.1);
+  background-color: rgb(42, 152, 255);
+  animation-play-state: paused;
 }
 
 .avatar-icon > p {
@@ -79,11 +120,150 @@
 .avatar-icon[data-avatar-icon="santa-clous"] {
   grid-column: 2;
   grid-row: 3;
+
+  animation: 3175ms playfulInhaling infinite alternate;
+  animation-timing-function: linear(
+    0,
+    0.058 6%,
+    0.109 9.8%,
+    0.174 13%,
+    0.262 15.9%,
+    0.536 21.5%,
+    0.997 27.7%,
+    0.527 34.1%,
+    0.428 36.4%,
+    0.396 38.5%,
+    0.431 40.6%,
+    0.532 42.7%,
+    0.996 48%,
+    0.677 51.9%,
+    0.607 53.4%,
+    0.582 54.9%,
+    0.605 56.4%,
+    0.673 57.9%,
+    0.999 62%,
+    0.786 65%,
+    0.74 66.2%,
+    0.724 67.4%,
+    0.739 68.6%,
+    0.782 69.8%,
+    0.999 73.4%,
+    0.878 75.7%,
+    0.837 77.8%,
+    0.87 79.9%,
+    1 83.2%,
+    0.942 85.1%,
+    0.923 86.9%,
+    0.936 88.5%,
+    1 92%,
+    0.981 94.5%,
+    1
+  );
+}
+
+@keyframes playfulInhaling {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.05);
+  }
+}
+.avatar-icon[data-avatar-icon="blinky-sheep"] {
+  animation: 2.4s playfulScaling infinite alternate;
+  animation-timing-function: linear(
+    0,
+    0.058 6%,
+    0.109 9.8%,
+    0.174 13%,
+    0.262 15.9%,
+    0.536 21.5%,
+    0.997 27.7%,
+    0.527 34.1%,
+    0.428 36.4%,
+    0.396 38.5%,
+    0.431 40.6%,
+    0.532 42.7%,
+    0.996 48%,
+    0.677 51.9%,
+    0.607 53.4%,
+    0.582 54.9%,
+    0.605 56.4%,
+    0.673 57.9%,
+    0.999 62%,
+    0.786 65%,
+    0.74 66.2%,
+    0.724 67.4%,
+    0.739 68.6%,
+    0.782 69.8%,
+    0.999 73.4%,
+    0.878 75.7%,
+    0.837 77.8%,
+    0.87 79.9%,
+    1 83.2%,
+    0.942 85.1%,
+    0.923 86.9%,
+    0.936 88.5%,
+    1 92%,
+    0.981 94.5%,
+    1
+  );
+}
+
+@keyframes playfulScaling {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.1);
+  }
 }
 
 .avatar-icon:has(:not(img)) {
   background-color: transparent;
   border: 10px solid rgba(255, 255, 255, 0.281);
+
+  animation: 4s unavailable infinite;
+  animation-timing-function: linear(
+    0,
+    0.223 11.7%,
+    0.392 18.4%,
+    0.619 24.8%,
+    0.999 33.3%,
+    0.748 40%,
+    0.691 42.7%,
+    0.672 45.3%,
+    0.69 47.8%,
+    0.743 50.4%,
+    0.999 57.7%,
+    0.883 61.8%,
+    0.856 63.6%,
+    0.848 65.3%,
+    0.855 67%,
+    0.879 68.8%,
+    0.999 74.5%,
+    0.953 77.5%,
+    0.94 80.2%,
+    0.95 82.7%,
+    1 88.2%,
+    0.987 91.9%,
+    1
+  );
+}
+
+@keyframes unavailable {
+  0% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.3;
+  }
 }
 
 .avatar-icon:has(:not(img)) {

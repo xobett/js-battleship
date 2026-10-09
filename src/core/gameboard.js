@@ -10,6 +10,10 @@ export class Gameboard {
     this.#buildBoard();
   }
 
+  get positions() {
+    return this.#positions.flat();
+  }
+
   #buildBoard() {
     for (let i = 0; i < this.#size; i++) {
       const x = [];

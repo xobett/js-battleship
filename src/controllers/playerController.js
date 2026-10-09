@@ -8,6 +8,10 @@ export class PlayerController {
     return this.#gameboard;
   }
 
+  get gameboardPositions() {
+    return this.#gameboard.positions;
+  }
+
   #fleet = undefined;
   get fleet() {
     return this.#fleet;

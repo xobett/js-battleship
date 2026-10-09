@@ -1,32 +1,46 @@
-export class GameController {
-  #players = [];
-  #uiController;
+import { Player } from "../core/player.js";
 
-  get players() {
-    return this.#players;
-  }
+export class GameController {
+  #uiController;
+  #player1 = undefined;
+
   constructor(uiController) {
     this.#uiController = uiController;
   }
 
   init() {
     this.#assignSceneHandlers();
+    this.#player1 = new Player("Cesar");
   }
 
   #assignSceneHandlers() {
     this.#uiController.IntroScene.addEventListener("click", () => {
-      this.#switchToMenu();
+      this.#loadScene("menu-scene");
     });
-    // this.#uiController.MenuScene.addEventListener("click", () => {
-    //   this.#switchToFleetPlacement();
-    // });
+
+    this.#uiController.MenuReturnOptn.addEventListener("click", () => {
+      this.#loadScene("intro-scene");
+    });
+
+    this.#uiController.MenuContinueOptn.addEventListener("click", () => {
+      this.#loadScene("fleet-placement-scene");
+      this.#renderFleetPlacement();
+    });
+
+    this.#uiController.FleetReturnOptn.addEventListener("click", () => {
+      this.#loadScene("menu-scene");
+      this.#uiController.cleanBoardById("player-placement-board");
+    });
   }
 
-  #switchToMenu() {
-    this.#uiController.loadSceneById("menu-scene");
+  #loadScene(scene) {
+    this.#uiController.loadSceneById(scene);
   }
-
-  #switchToFleetPlacement() {
-    this.#uiController.loadSceneById("fleet-placement-scene");
+  #renderFleetPlacement() {
+    const gameboardPositions = this.#player1.GameboardPositions;
+    this.#uiController.renderPlayerBoard(
+      "player-placement-board",
+      gameboardPositions,
+    );
   }
 }

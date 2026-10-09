@@ -11,14 +11,6 @@ export class Player {
     return this.#score;
   }
 
-  placeFleet() {
-    if (this.#isCPU) {
-      this.#controller.randomlyPlaceFleet();
-    } else {
-      this.#controller.placeFleet();
-    }
-  }
-
   attack(opponent) {
     if (this.#isCPU) {
       const randomAttackPos = opponent.getRandomAttackPos();
@@ -39,6 +31,10 @@ export class Player {
 
   fleetIsSunk() {
     return this.#controller.gameboard.entireFleetIsSunk();
+  }
+
+  get GameboardPositions() {
+    return this.#controller.gameboardPositions;
   }
 
   constructor(name, isCPU = false) {

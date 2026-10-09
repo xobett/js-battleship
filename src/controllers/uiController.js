@@ -7,18 +7,23 @@ import "../css/scenes/gameplay.css";
 import "../css/scenes/fleet-placement.css";
 
 export class UiController {
+  #selectedAvatar = undefined;
   #gameScenes = [];
   constructor() {
     this.#gameScenes = document.querySelectorAll(".game-scene");
   }
 
-  renderPlayerBoard(selector, positions) {
-    const domBoard = document.getElementById(selector);
+  renderPlayerBoard(selector, gameboardPositions) {
+    try {
+      const domBoard = document.getElementById(selector);
 
-    for (let i = 0; i < 100; i++) {
-      const div = document.createElement("div");
-      div.classList.add("position");
-      domBoard.append(div);
+      for (let i = 0; i < gameboardPositions.length; i++) {
+        const div = document.createElement("div");
+        div.classList.add("position");
+        domBoard.append(div);
+      }
+    } catch {
+      console.error(`No element with the id of ${selector} exists`);
     }
   }
 
@@ -36,15 +41,26 @@ export class UiController {
     return document.getElementById("intro-scene");
   }
 
-  get MenuScene() {
-    return document.getElementById("menu-scene");
+  get MenuContinueOptn() {
+    return document.getElementById("menu-continue-optn");
+  }
+  get MenuReturnOptn() {
+    return document.getElementById("menu-return-optn");
   }
 
-  get GameplayScene() {
-    return document.getElementById("gameplay-scene");
+  get FleetContinueOptn() {
+    return document.getElementById("fleet-continue-optn");
+  }
+  get FleetReturnOptn() {
+    return document.getElementById("fleet-return-optn");
   }
 
-  get FleetSelection() {
-    return document.getElementById("fleet-placement-scene");
+  cleanBoardById(id) {
+    try {
+      const board = document.getElementById(id);
+      board.replaceChildren();
+    } catch {
+      console.error(`No element with the id of ${id} exists`);
+    }
   }
 }
