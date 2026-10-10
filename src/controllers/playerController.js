@@ -4,6 +4,13 @@ import { GameController } from "./gameController.js";
 
 export class PlayerController {
   #gameboard = undefined;
+  #fleet = undefined;
+
+  constructor() {
+    this.#gameboard = new Gameboard();
+    this.#fleet = FleetLoadouts.starterFleet;
+  }
+
   get gameboard() {
     return this.#gameboard;
   }
@@ -12,7 +19,6 @@ export class PlayerController {
     return this.#gameboard.positions;
   }
 
-  #fleet = undefined;
   get fleet() {
     return this.#fleet;
   }
@@ -36,10 +42,5 @@ export class PlayerController {
 
   receiveAttack(coordinates) {
     return this.#gameboard.receiveAttack(coordinates);
-  }
-
-  constructor() {
-    this.#gameboard = new Gameboard();
-    this.#fleet = FleetLoadouts.starterFleet;
   }
 }

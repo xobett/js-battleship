@@ -6,9 +6,8 @@ export class Player {
   #controller = null;
   #isCPU = false;
 
-  #score = 0;
-  get Score() {
-    return this.#score;
+  get fleet() {
+    return this.#controller.fleet;
   }
 
   attack(opponent) {
@@ -33,7 +32,7 @@ export class Player {
     return this.#controller.gameboard.entireFleetIsSunk();
   }
 
-  get GameboardPositions() {
+  get gameboardPositions() {
     return this.#controller.gameboardPositions;
   }
 

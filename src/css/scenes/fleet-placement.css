@@ -110,6 +110,9 @@
 
 .fleet-container .ship {
   border: 1px solid rgba(0, 0, 0, 0.4);
+
+  display: flex;
+  justify-content: center;
 }
 
 .fleet-container::before,
@@ -123,6 +126,7 @@
   height: calc(100%);
 
   z-index: 100;
+  pointer-events: none;
 }
 
 .input-btns-container li {

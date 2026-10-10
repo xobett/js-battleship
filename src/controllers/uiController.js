@@ -7,7 +7,6 @@ import "../css/scenes/gameplay.css";
 import "../css/scenes/fleet-placement.css";
 
 export class UiController {
-  #selectedAvatar = undefined;
   #gameScenes = [];
   constructor() {
     this.#gameScenes = document.querySelectorAll(".game-scene");
@@ -53,6 +52,13 @@ export class UiController {
   }
   get FleetReturnOptn() {
     return document.getElementById("fleet-return-optn");
+  }
+
+  get DomPositions() {
+    return document.querySelectorAll(".position");
+  }
+  get ShipContainers() {
+    return document.querySelectorAll(".fleet-container .ship");
   }
 
   cleanBoardById(id) {
