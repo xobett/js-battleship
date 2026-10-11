@@ -32,6 +32,8 @@ export class Player {
     return this.#controller.gameboard.entireFleetIsSunk();
   }
 
+  canPlaceShip(coordinates, ship) {}
+
   get gameboardPositions() {
     return this.#controller.gameboardPositions;
   }

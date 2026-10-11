@@ -3,23 +3,15 @@ import { Player } from "../core/player.js";
 export class GameController {
   #uiController;
   #player1 = undefined;
-  #selectedSprite = undefined;
 
   constructor(uiController) {
     this.#uiController = uiController;
   }
 
   init() {
+    this.#uiController.init();
     this.#configureNavigation();
     this.#player1 = new Player("Cesar");
-
-    document.addEventListener("mousemove", (e) => {
-      console.log(this.#selectedSprite);
-      if (this.#selectedSprite === undefined) return;
-      this.#selectedSprite.style.position = "absolute";
-      this.#selectedSprite.style.top = e.clientY + "px";
-      this.#selectedSprite.style.left = e.clientX + "px";
-    });
   }
 
   #configureNavigation() {
@@ -48,8 +40,8 @@ export class GameController {
 
   #onEnterFleetPlacementScene() {
     this.#renderPlacingGameboard();
-    this.renderPlaceableShips();
     this.#assignFleetPlacementEventHandlers();
+    this.#uiController.renderDraggableShips(this.#player1.fleet);
   }
 
   #renderPlacingGameboard() {
@@ -62,29 +54,7 @@ export class GameController {
 
   #assignFleetPlacementEventHandlers() {
     this.#uiController.DomPositions.forEach((p) => {
-      p.addEventListener("click", () => console.log("test"));
+      p.addEventListener("mouseenter", () => console.log("test"));
     });
-  }
-
-  renderPlaceableShips() {
-    for (let i = 0; i < this.#uiController.ShipContainers.length; i++) {
-      const domContainer = this.#uiController.ShipContainers[i];
-      const currShip = this.#player1.fleet[i];
-      const img = document.createElement("img");
-      img.src = currShip.spriteSrc;
-      domContainer.append(img);
-
-      img.dataset.selected = false;
-      img.dataset.shipName = currShip.name;
-      img.style.pointerEvents = "none";
-
-      domContainer.addEventListener("pointerdown", (e) => {
-        const img = e.target.firstChild;
-        const clone = img.cloneNode();
-        document.body.append(clone);
-        this.#selectedSprite = clone;
-        console.log(this.#selectedSprite);
-      });
-    }
   }
 }

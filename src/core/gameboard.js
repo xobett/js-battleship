@@ -159,12 +159,14 @@ export class Gameboard {
 }
 
 class Position {
+  isShipStartingPlacedPos = undefined;
   #ship = null;
   get ship() {
     return this.#ship;
   }
 
-  assignShip(ship) {
+  assignShip(ship, isShipStartingPlacedPos = false) {
     this.#ship = ship;
+    this.isShipStartingPlacedPos = isShipStartingPlacedPos;
   }
 }
