@@ -158,7 +158,6 @@
 #menu-scene .avatar-icon:has(img):hover {
   cursor: pointer;
   background-color: rgb(42, 152, 255);
-  animation-play-state: paused;
 }
 
 .avatar-icon:has(:not(img)) {

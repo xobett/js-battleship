@@ -33,17 +33,18 @@ export class Player {
   }
 
   canPlaceShip(ship, coordinates, axis) {
-    return this.#controller.canPlaceShip();
+    return this.#controller.canPlaceShip(ship, coordinates, axis);
   }
 
   ship(name) {
     for (let i = 0; i < this.fleet.length; i++) {
-      if (this.fleet[i].name === name) {
-        return true;
+      const currShip = this.fleet[i];
+      if (currShip.name === name) {
+        return currShip;
       }
     }
 
-    return false;
+    return undefined;
   }
 
   get gameboardPositions() {

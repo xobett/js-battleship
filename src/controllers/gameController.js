@@ -55,10 +55,11 @@ export class GameController {
   #assignFleetPlacementEventHandlers() {
     this.#uiController.DomPositions.forEach((p) => {
       p.addEventListener("pointerup", () => {
-        if (this.#uiController.selectedShip !== undefined) {
-          console.log(this.#uiController.selectedShip.dataset.shipName);
-          this.#uiController.clearSelectedShip();
-        }
+        const selectedShip = this.#uiController.selectedShip;
+        if (selectedShip === undefined) return;
+
+        console.log(selectedShip.dataset.shipName);
+        this.#uiController.clearSelectedShip();
       });
 
       p.addEventListener("pointerenter", (e) => {
@@ -67,10 +68,12 @@ export class GameController {
 
         const currCellData = e.target.dataset;
 
-        const ship = this.#player1.ship(currCellData.shipName);
+        const ship = this.#player1.ship(selectedShip.dataset.shipName);
         const coordinates = JSON.parse(currCellData.coordinates);
-        const axis = currCellData.axis;
-        console.log(axis);
+        const axis = selectedShip.dataset.axis;
+
+        const canPlace = this.#player1.canPlaceShip(ship, coordinates, axis);
+        this.#uiController.setDragValidity(canPlace);
       });
     });
   }

@@ -10,7 +10,12 @@ export class UiController {
   #gameScenes = [];
   #selectedShip = undefined;
   #mouseHeld = false;
+  #currentRotation = "vertical";
+
   validDrag = false;
+  validDragClass = "validDrag";
+  invalidDragClass = "invalidDrag";
+  currentValidClass = undefined;
 
   get selectedShip() {
     return this.#selectedShip;
@@ -72,11 +77,14 @@ export class UiController {
       document.body.style.userSelect = "initial";
       document.body.style.cursor = "initial";
       this.#cleanDomPositionsDraggableClasses();
+
+      if (this.#selectedShip !== undefined) this.clearSelectedShip();
     });
 
     document.addEventListener("pointermove", (e) => {
       if (!this.#mouseHeld) return;
       if (this.#selectedShip === undefined) return;
+
       document.body.style.userSelect = "none";
       this.#selectedShip.style.position = "absolute";
       this.#selectedShip.style.top = e.clientY + "px";
@@ -84,16 +92,14 @@ export class UiController {
       this.#selectedShip.style.transform = "translate(-50%,-100%)";
       document.body.style.cursor = "grabbing";
 
+      this.#cleanDomPositionsDraggableClasses();
       this.DomPositions.forEach((p) => {
-        let dragBgClass;
-
         if (this.canDrag) {
-          dragBgClass = "validDrag";
-        } else dragBgClass = "invaldDrag";
+          this.currentValidClass = this.validDragClass;
+        } else this.currentValidClass = this.invalidDragClass;
 
         if (this.#isOverlapping(this.#selectedShip, p))
-          p.classList.add(dragBgClass);
-        else p.classList.remove(dragBgClass);
+          p.classList.add(this.currentValidClass);
       });
     });
   }
@@ -142,6 +148,7 @@ export class UiController {
 
       img.dataset.selected = false;
       img.dataset.shipName = currShip.name;
+      img.dataset.axis = this.#currentRotation;
       img.style.pointerEvents = "none";
 
       domContainer.addEventListener("pointerdown", (e) => {
@@ -154,7 +161,6 @@ export class UiController {
           clone.style.width = "41px";
           clone.style.height = "200px";
         }
-        clone.style.draggable = true;
         document.body.append(clone);
         this.#selectedShip = clone;
       });
@@ -175,6 +181,8 @@ export class UiController {
   }
 
   #cleanDomPositionsDraggableClasses() {
-    this.DomPositions.forEach((e) => e.classList.remove("onDragRange"));
+    this.DomPositions.forEach((e) =>
+      e.classList.remove(this.currentValidClass),
+    );
   }
 }

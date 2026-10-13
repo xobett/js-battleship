@@ -37,24 +37,31 @@ export class Gameboard {
     return allSunk;
   }
 
-  canPlaceShip(ship, pos, axis) {
-    const [x, y] = pos;
+  canPlaceShip(ship, coordinates, axis) {
+    const [x, y] = coordinates;
     if (!this.#isValidCoordinate(x) || !this.#isValidCoordinate(y))
       return false;
 
     const [endX, endY] = [
-      x + (axis === Axis.horizontal ? ship.size - 1 : 0),
-      y + (axis === Axis.vertical ? ship.size - 1 : 0),
+      x + (axis === Axis.vertical ? ship.size - 1 : 0),
+      y + (axis === Axis.horizontal ? ship.size - 1 : 0),
     ];
 
-    if (!this.#isValidCoordinate(endX) || !this.#isValidCoordinate(endY))
+    if (!this.#isValidCoordinate(endX) || !this.#isValidCoordinate(endY)) {
+      console.log(
+        `Coordinates given ${coordinates}, size of ship ${ship.size}, axis ${axis}`,
+      );
+      console.log("invalid x: " + endX);
+      console.log("invalid y: " + endY);
       return false;
+    }
 
     let collisionedWithExisting = false;
     if (axis === Axis.horizontal) {
       for (let i = x; i <= endX; i++) {
         const boardPos = this.#positions[i][y];
         if (boardPos.ship !== null) {
+          console.log("collisions with " + ship.name);
           collisionedWithExisting = true;
           break;
         }
@@ -63,6 +70,7 @@ export class Gameboard {
       for (let i = y; i <= endY; i++) {
         const boardPos = this.#positions[x][i];
         if (boardPos.ship !== null) {
+          console.log("vertical collisions with " + ship.name);
           collisionedWithExisting = true;
           break;
         }
@@ -74,8 +82,8 @@ export class Gameboard {
     return true;
   }
 
-  placeShip(ship, pos, axis) {
-    const [x, y] = pos;
+  placeShip(ship, coordinates, axis) {
+    const [x, y] = coordinates;
     if (!this.#isValidCoordinate(x) || !this.#isValidCoordinate(y))
       return false;
 
