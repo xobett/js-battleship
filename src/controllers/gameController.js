@@ -54,7 +54,24 @@ export class GameController {
 
   #assignFleetPlacementEventHandlers() {
     this.#uiController.DomPositions.forEach((p) => {
-      p.addEventListener("mouseenter", () => console.log("test"));
+      p.addEventListener("pointerup", () => {
+        if (this.#uiController.selectedShip !== undefined) {
+          console.log(this.#uiController.selectedShip.dataset.shipName);
+          this.#uiController.clearSelectedShip();
+        }
+      });
+
+      p.addEventListener("pointerenter", (e) => {
+        const selectedShip = this.#uiController.selectedShip;
+        if (selectedShip === undefined) return;
+
+        const currCellData = e.target.dataset;
+
+        const ship = this.#player1.ship(currCellData.shipName);
+        const coordinates = JSON.parse(currCellData.coordinates);
+        const axis = currCellData.axis;
+        console.log(axis);
+      });
     });
   }
 }

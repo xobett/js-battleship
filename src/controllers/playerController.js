@@ -23,6 +23,10 @@ export class PlayerController {
     return this.#fleet;
   }
 
+  canPlaceShip(ship, coordinates, axis) {
+    return this.#gameboard.canPlaceShip(ship, coordinates, axis);
+  }
+
   placeFleet() {
     this.#fleet.forEach((s) => {
       const [pos, axis] = GameController.getPosAndInputAsync();

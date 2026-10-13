@@ -3,7 +3,7 @@ import { Gameboard } from "../core/gameboard";
 import { Ship } from "../core/ship";
 import { Axis } from "../enums/axis";
 
-describe.skip("gameboard unit tests", () => {
+describe("gameboard unit tests", () => {
   it("should return false when placing a ship on invalid x position", () => {
     const ship = new Ship("Destroyer", 2);
     const gameboard = new Gameboard();
@@ -24,7 +24,7 @@ describe.skip("gameboard unit tests", () => {
   });
 });
 
-describe.skip("position tests on horizontal axis", () => {
+describe("position tests on horizontal axis", () => {
   it("should return true when placing a ship on a valid position", () => {
     const ship = new Ship("Destroyer", 2);
     const gameboard = new Gameboard();
@@ -54,7 +54,7 @@ describe.skip("position tests on horizontal axis", () => {
   });
 });
 
-describe.skip("position tests on vertical axis", () => {
+describe("position tests on vertical axis", () => {
   it("should return true when placing a ship on a valid position", () => {
     const ship = new Ship("Destroyer", 2);
     const gameboard = new Gameboard();

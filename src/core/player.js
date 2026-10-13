@@ -32,7 +32,19 @@ export class Player {
     return this.#controller.gameboard.entireFleetIsSunk();
   }
 
-  canPlaceShip(coordinates, ship) {}
+  canPlaceShip(ship, coordinates, axis) {
+    return this.#controller.canPlaceShip();
+  }
+
+  ship(name) {
+    for (let i = 0; i < this.fleet.length; i++) {
+      if (this.fleet[i].name === name) {
+        return true;
+      }
+    }
+
+    return false;
+  }
 
   get gameboardPositions() {
     return this.#controller.gameboardPositions;

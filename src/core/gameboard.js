@@ -11,7 +11,7 @@ export class Gameboard {
   }
 
   get positions() {
-    return this.#positions.flat();
+    return this.#positions;
   }
 
   #buildBoard() {
@@ -37,14 +37,14 @@ export class Gameboard {
     return allSunk;
   }
 
-  placeShip(ship, pos, axis) {
+  canPlaceShip(ship, pos, axis) {
     const [x, y] = pos;
     if (!this.#isValidCoordinate(x) || !this.#isValidCoordinate(y))
       return false;
 
     const [endX, endY] = [
-      x + (axis === Axis.horizontal ? ship.size : 0),
-      y + (axis === Axis.vertical ? ship.size : 0),
+      x + (axis === Axis.horizontal ? ship.size - 1 : 0),
+      y + (axis === Axis.vertical ? ship.size - 1 : 0),
     ];
 
     if (!this.#isValidCoordinate(endX) || !this.#isValidCoordinate(endY))
@@ -52,7 +52,7 @@ export class Gameboard {
 
     let collisionedWithExisting = false;
     if (axis === Axis.horizontal) {
-      for (let i = x; i < endX; i++) {
+      for (let i = x; i <= endX; i++) {
         const boardPos = this.#positions[i][y];
         if (boardPos.ship !== null) {
           collisionedWithExisting = true;
@@ -60,7 +60,44 @@ export class Gameboard {
         }
       }
     } else {
-      for (let i = y; i < endY; i++) {
+      for (let i = y; i <= endY; i++) {
+        const boardPos = this.#positions[x][i];
+        if (boardPos.ship !== null) {
+          collisionedWithExisting = true;
+          break;
+        }
+      }
+    }
+
+    if (collisionedWithExisting) return false;
+
+    return true;
+  }
+
+  placeShip(ship, pos, axis) {
+    const [x, y] = pos;
+    if (!this.#isValidCoordinate(x) || !this.#isValidCoordinate(y))
+      return false;
+
+    const [endX, endY] = [
+      x + (axis === Axis.horizontal ? ship.size - 1 : 0),
+      y + (axis === Axis.vertical ? ship.size - 1 : 0),
+    ];
+
+    if (!this.#isValidCoordinate(endX) || !this.#isValidCoordinate(endY))
+      return false;
+
+    let collisionedWithExisting = false;
+    if (axis === Axis.horizontal) {
+      for (let i = x; i <= endX; i++) {
+        const boardPos = this.#positions[i][y];
+        if (boardPos.ship !== null) {
+          collisionedWithExisting = true;
+          break;
+        }
+      }
+    } else {
+      for (let i = y; i <= endY; i++) {
         const boardPos = this.#positions[x][i];
         if (boardPos.ship !== null) {
           collisionedWithExisting = true;
@@ -72,12 +109,12 @@ export class Gameboard {
     if (collisionedWithExisting) return false;
 
     if (axis === Axis.horizontal) {
-      for (let i = x; i < endX; i++) {
+      for (let i = x; i <= endX; i++) {
         const boardPos = this.#positions[i][y];
         boardPos.assignShip(ship);
       }
     } else {
-      for (let i = y; i < endY; i++) {
+      for (let i = y; i <= endY; i++) {
         const boardPos = this.#positions[x][i];
         boardPos.assignShip(ship);
       }

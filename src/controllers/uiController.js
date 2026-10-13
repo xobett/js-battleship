@@ -8,9 +8,13 @@ import "../css/scenes/fleet-placement.css";
 
 export class UiController {
   #gameScenes = [];
-  #selectedSprite = undefined;
+  #selectedShip = undefined;
   #mouseHeld = false;
   validDrag = false;
+
+  get selectedShip() {
+    return this.#selectedShip;
+  }
 
   get IntroScene() {
     return document.getElementById("intro-scene");
@@ -72,38 +76,48 @@ export class UiController {
 
     document.addEventListener("pointermove", (e) => {
       if (!this.#mouseHeld) return;
-      if (this.#selectedSprite === undefined) return;
+      if (this.#selectedShip === undefined) return;
       document.body.style.userSelect = "none";
-      this.#selectedSprite.style.position = "absolute";
-      this.#selectedSprite.style.top = e.clientY + "px";
-      this.#selectedSprite.style.left = e.clientX + "px";
-      this.#selectedSprite.style.transform = "translate(-50%,-100%)";
+      this.#selectedShip.style.position = "absolute";
+      this.#selectedShip.style.top = e.clientY + "px";
+      this.#selectedShip.style.left = e.clientX + "px";
+      this.#selectedShip.style.transform = "translate(-50%,-100%)";
       document.body.style.cursor = "grabbing";
 
       this.DomPositions.forEach((p) => {
         let dragBgClass;
 
         if (this.canDrag) {
-          dragBgClass = ".validDrag";
-        } else dragBgClass = ".invaldDrag";
+          dragBgClass = "validDrag";
+        } else dragBgClass = "invaldDrag";
 
-        if (this.#isOverlapping(this.#selectedSprite, p))
+        if (this.#isOverlapping(this.#selectedShip, p))
           p.classList.add(dragBgClass);
         else p.classList.remove(dragBgClass);
       });
     });
   }
 
+  clearSelectedShip() {
+    this.#selectedShip.remove();
+    this.#selectedShip = undefined;
+  }
+
   renderPlayerBoard(selector, gameboardPositions) {
     try {
       const domBoard = document.getElementById(selector);
 
-      for (let i = 0; i < gameboardPositions.length; i++) {
-        const div = document.createElement("div");
-        div.classList.add("position");
-        domBoard.append(div);
+      for (let x = gameboardPositions.length - 1; x >= 0; x--) {
+        const currX = gameboardPositions[x];
+        for (let y = 0; y < currX.length; y++) {
+          const pos = document.createElement("div");
+          pos.classList.add("position");
+          pos.dataset.coordinates = `[${x},${y}]`;
+          domBoard.append(pos);
+        }
       }
-    } catch {
+    } catch (e) {
+      console.error(e);
       console.error(`No element with the id of ${selector} exists`);
     }
   }
@@ -142,7 +156,7 @@ export class UiController {
         }
         clone.style.draggable = true;
         document.body.append(clone);
-        this.#selectedSprite = clone;
+        this.#selectedShip = clone;
       });
     }
   }
