@@ -16,11 +16,11 @@ export class Gameboard {
 
   #buildBoard() {
     for (let i = 0; i < this.#size; i++) {
-      const x = [];
+      const row = [];
       for (let j = 0; j < this.#size; j++) {
-        x.push(new Position());
+        row.push(new Position());
       }
-      this.#positions.push(x);
+      this.#positions.push(row);
     }
   }
 
@@ -38,39 +38,35 @@ export class Gameboard {
   }
 
   canPlaceShip(ship, coordinates, axis) {
-    const [x, y] = coordinates;
-    if (!this.#isValidCoordinate(x) || !this.#isValidCoordinate(y))
-      return false;
+    const [row, column] = coordinates;
+    if (!this.#isValidCoordinate(row) || !this.#isValidCoordinate(column))
+      return new Error("Invalid placing coordinates");
 
-    const [endX, endY] = [
-      x + (axis === Axis.vertical ? ship.size - 1 : 0),
-      y + (axis === Axis.horizontal ? ship.size - 1 : 0),
+    const [endRow, endColumn] = [
+      row + (axis === Axis.vertical ? ship.size - 1 : 0),
+      column + (axis === Axis.horizontal ? ship.size - 1 : 0),
     ];
 
-    if (!this.#isValidCoordinate(endX) || !this.#isValidCoordinate(endY)) {
-      console.log(
-        `Coordinates given ${coordinates}, size of ship ${ship.size}, axis ${axis}`,
-      );
-      console.log("invalid x: " + endX);
-      console.log("invalid y: " + endY);
+    if (
+      !this.#isValidCoordinate(endRow) ||
+      !this.#isValidCoordinate(endColumn)
+    ) {
       return false;
     }
 
     let collisionedWithExisting = false;
-    if (axis === Axis.horizontal) {
-      for (let i = x; i <= endX; i++) {
-        const boardPos = this.#positions[i][y];
+    if (axis === Axis.vertical) {
+      for (let i = row; i <= endRow; i++) {
+        const boardPos = this.#positions[i][column];
         if (boardPos.ship !== null) {
-          console.log("collisions with " + ship.name);
           collisionedWithExisting = true;
           break;
         }
       }
     } else {
-      for (let i = y; i <= endY; i++) {
-        const boardPos = this.#positions[x][i];
+      for (let i = column; i <= endColumn; i++) {
+        const boardPos = this.#positions[row][i];
         if (boardPos.ship !== null) {
-          console.log("vertical collisions with " + ship.name);
           collisionedWithExisting = true;
           break;
         }
@@ -83,64 +79,44 @@ export class Gameboard {
   }
 
   placeShip(ship, coordinates, axis) {
-    const [x, y] = coordinates;
-    if (!this.#isValidCoordinate(x) || !this.#isValidCoordinate(y))
-      return false;
-
-    const [endX, endY] = [
-      x + (axis === Axis.horizontal ? ship.size - 1 : 0),
-      y + (axis === Axis.vertical ? ship.size - 1 : 0),
+    const [row, column] = coordinates;
+    const [endRow, endColumn] = [
+      row + (axis === Axis.vertical ? ship.size - 1 : 0),
+      column + (axis === Axis.vertical ? ship.size - 1 : 0),
     ];
 
-    if (!this.#isValidCoordinate(endX) || !this.#isValidCoordinate(endY))
-      return false;
-
-    let collisionedWithExisting = false;
-    if (axis === Axis.horizontal) {
-      for (let i = x; i <= endX; i++) {
-        const boardPos = this.#positions[i][y];
-        if (boardPos.ship !== null) {
-          collisionedWithExisting = true;
-          break;
-        }
-      }
-    } else {
-      for (let i = y; i <= endY; i++) {
-        const boardPos = this.#positions[x][i];
-        if (boardPos.ship !== null) {
-          collisionedWithExisting = true;
-          break;
-        }
-      }
-    }
-
-    if (collisionedWithExisting) return false;
-
-    if (axis === Axis.horizontal) {
-      for (let i = x; i <= endX; i++) {
-        const boardPos = this.#positions[i][y];
+    if (axis === Axis.vertical) {
+      for (let i = row; i <= endRow; i++) {
+        const boardPos = this.#positions[i][column];
         boardPos.assignShip(ship);
       }
     } else {
-      for (let i = y; i <= endY; i++) {
-        const boardPos = this.#positions[x][i];
+      for (let i = column; i <= endColumn; i++) {
+        const boardPos = this.#positions[row][i];
         boardPos.assignShip(ship);
       }
     }
 
     this.#ships.push(ship);
-    return true;
+    console.log("success");
   }
 
   randomlyPlaceShip(ship) {
+    // TODO: FIX
     let placed = false;
     while (!placed) {
-      const [randomX, randomY] = [this.#getRandomPos(), this.#getRandomPos()];
-      const randomPos = [randomX, randomY];
+      const [randomRow, randomColumn] = [
+        this.#getRandomPos(),
+        this.#getRandomPos(),
+      ];
+      const randomPos = [randomRow, randomColumn];
       const randomAxis = this.#getRandomAxis();
 
-      const result = this.placeShip(ship, randomPos, randomAxis);
-      if (result) placed = true;
+      const success = this.canPlaceShip(ship, randomPos, randomAxis);
+      if (success) {
+        this.placeShip(ship, randomPos, randomAxis);
+        placed = true;
+      }
     }
   }
 
@@ -148,8 +124,11 @@ export class Gameboard {
     let nonAttackedPos = undefined;
 
     while (nonAttackedPos === undefined) {
-      const [randomX, randomY] = [this.#getRandomPos(), this.#getRandomPos()];
-      const randomPos = [randomX, randomY];
+      const [randomRow, randomColumn] = [
+        this.#getRandomPos(),
+        this.#getRandomPos(),
+      ];
+      const randomPos = [randomRow, randomColumn];
       if (
         !this.#attackedPositions.some((c) => this.#hasCoordinates(c, randomPos))
       ) {
@@ -177,8 +156,8 @@ export class Gameboard {
 
     this.#attackedPositions.push(coordinates);
 
-    const [x, y] = coordinates;
-    const pos = this.#positions[x][y];
+    const [row, column] = coordinates;
+    const pos = this.#positions[row][column];
     if (pos.ship === null) return false;
 
     pos.ship.hit();
@@ -195,9 +174,9 @@ export class Gameboard {
 
   printBoard() {
     for (let i = this.#positions.length - 1; i >= 0; i--) {
-      const x = this.#positions[i];
+      const row = this.#positions[i];
       console.log(
-        `Row ${i}  ${x.map((y) => (y.ship ? y.ship.name : " ")).join(",")} \n`,
+        `Row ${i}  ${row.map((column) => (column.ship ? column.ship.name : " ")).join(",")} \n`,
       );
     }
   }

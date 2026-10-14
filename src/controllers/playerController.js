@@ -1,6 +1,5 @@
 import { Gameboard } from "../core/gameboard.js";
 import { FleetLoadouts } from "../core/fleetLoadouts.js";
-import { GameController } from "./gameController.js";
 
 export class PlayerController {
   #gameboard = undefined;
@@ -27,11 +26,8 @@ export class PlayerController {
     return this.#gameboard.canPlaceShip(ship, coordinates, axis);
   }
 
-  placeFleet() {
-    this.#fleet.forEach((s) => {
-      const [pos, axis] = GameController.getPosAndInputAsync();
-      this.#gameboard.placeShip(s, pos, axis);
-    });
+  placeShip(ship, coordinates, axis) {
+    return this.#gameboard.placeShip(ship, coordinates, axis);
   }
 
   randomlyPlaceFleet() {

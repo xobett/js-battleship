@@ -54,11 +54,23 @@ export class GameController {
 
   #assignShipDragEventHandlers() {
     this.#uiController.playerGameboardPositions.forEach((p) => {
-      p.addEventListener("pointerup", () => {
+      p.addEventListener("pointerup", (e) => {
         const selectedShip = this.#uiController.selectedShip;
         if (selectedShip === undefined) return;
 
-        console.log(selectedShip.dataset.shipName);
+        const currCellData = e.target.dataset;
+
+        const ship = this.#player1.ship(selectedShip.dataset.shipName);
+        const coordinates = JSON.parse(currCellData.coordinates);
+        const axis = selectedShip.dataset.axis;
+
+        const canPlace = this.#player1.canPlaceShip(ship, coordinates, axis);
+        this.#uiController.setDragValidity(canPlace);
+
+        if (canPlace) {
+          this.#player1.placeShip(ship, coordinates, axis);
+        }
+
         this.#uiController.clearSelectedShip();
       });
 
