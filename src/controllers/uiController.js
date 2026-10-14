@@ -12,37 +12,37 @@ export class UiController {
   #mouseHeld = false;
   #currentRotation = "vertical";
 
-  validDrag = false;
-  validDragClass = "validDrag";
-  invalidDragClass = "invalidDrag";
-  currentValidClass = undefined;
+  #canDrag = false;
+  #validDragClass = "validDrag";
+  #invalidDragClass = "invalidDrag";
+  #currentValidClass = undefined;
 
   get selectedShip() {
     return this.#selectedShip;
   }
 
-  get IntroScene() {
+  get introScene() {
     return document.getElementById("intro-scene");
   }
 
-  get MenuContinueOptn() {
+  get menuContinueOptn() {
     return document.getElementById("menu-continue-optn");
   }
-  get MenuReturnOptn() {
+  get menuReturnOptn() {
     return document.getElementById("menu-return-optn");
   }
 
-  get FleetContinueOptn() {
+  get fleetContinueOptn() {
     return document.getElementById("fleet-continue-optn");
   }
-  get FleetReturnOptn() {
+  get fleetReturnOptn() {
     return document.getElementById("fleet-return-optn");
   }
 
-  get DomPositions() {
+  get playerGameboardPositions() {
     return document.querySelectorAll(".position");
   }
-  get ShipContainers() {
+  get shipContainers() {
     return document.querySelectorAll(".fleet-container .ship");
   }
 
@@ -64,7 +64,7 @@ export class UiController {
   }
 
   setDragValidity(value) {
-    this.canDrag = value;
+    this.#canDrag = value;
   }
 
   #handleDrag() {
@@ -76,7 +76,7 @@ export class UiController {
       this.#mouseHeld = false;
       document.body.style.userSelect = "initial";
       document.body.style.cursor = "initial";
-      this.#cleanDomPositionsDraggableClasses();
+      this.#cleanDragVisuals();
 
       if (this.#selectedShip !== undefined) this.clearSelectedShip();
     });
@@ -92,14 +92,15 @@ export class UiController {
       this.#selectedShip.style.transform = "translate(-50%,-100%)";
       document.body.style.cursor = "grabbing";
 
-      this.#cleanDomPositionsDraggableClasses();
-      this.DomPositions.forEach((p) => {
-        if (this.canDrag) {
-          this.currentValidClass = this.validDragClass;
-        } else this.currentValidClass = this.invalidDragClass;
-
+      this.#cleanDragVisuals();
+      this.playerGameboardPositions.forEach((p) => {
+        if (this.#canDrag) {
+          this.#currentValidClass = this.#validDragClass;
+        } else {
+          this.#currentValidClass = this.#invalidDragClass;
+        }
         if (this.#isOverlapping(this.#selectedShip, p))
-          p.classList.add(this.currentValidClass);
+          p.classList.add(this.#currentValidClass);
       });
     });
   }
@@ -139,28 +140,31 @@ export class UiController {
   }
 
   renderDraggableShips(playerFleet) {
-    for (let i = 0; i < this.ShipContainers.length; i++) {
-      const domContainer = this.ShipContainers[i];
+    for (let i = 0; i < this.shipContainers.length; i++) {
+      const currContainer = this.shipContainers[i];
       const currShip = playerFleet[i];
       const img = document.createElement("img");
       img.src = currShip.spriteSrc;
-      domContainer.append(img);
+      currContainer.append(img);
 
       img.dataset.selected = false;
       img.dataset.shipName = currShip.name;
       img.dataset.axis = this.#currentRotation;
       img.style.pointerEvents = "none";
 
-      domContainer.addEventListener("pointerdown", (e) => {
+      currContainer.addEventListener("pointerdown", (e) => {
         const img = e.target.firstChild;
         const clone = img.cloneNode();
+
         clone.style.position = "absolute";
         clone.style.top = e.clientY + "px";
         clone.style.left = e.clientX + "px";
+
         if (currShip.name === "Carrier") {
           clone.style.width = "41px";
           clone.style.height = "200px";
         }
+
         document.body.append(clone);
         this.#selectedShip = clone;
       });
@@ -180,9 +184,10 @@ export class UiController {
     return isOnRange;
   }
 
-  #cleanDomPositionsDraggableClasses() {
-    this.DomPositions.forEach((e) =>
-      e.classList.remove(this.currentValidClass),
-    );
+  #cleanDragVisuals() {
+    this.playerGameboardPositions.forEach((e) => {
+      e.classList.remove(this.#validDragClass);
+      e.classList.remove(this.#invalidDragClass);
+    });
   }
 }

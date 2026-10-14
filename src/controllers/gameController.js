@@ -15,20 +15,20 @@ export class GameController {
   }
 
   #configureNavigation() {
-    this.#uiController.IntroScene.addEventListener("click", () => {
+    this.#uiController.introScene.addEventListener("click", () => {
       this.#loadScene("menu-scene");
     });
 
-    this.#uiController.MenuReturnOptn.addEventListener("click", () => {
+    this.#uiController.menuReturnOptn.addEventListener("click", () => {
       this.#loadScene("intro-scene");
     });
 
-    this.#uiController.MenuContinueOptn.addEventListener("click", () => {
+    this.#uiController.menuContinueOptn.addEventListener("click", () => {
       this.#loadScene("fleet-placement-scene");
       this.#onEnterFleetPlacementScene();
     });
 
-    this.#uiController.FleetReturnOptn.addEventListener("click", () => {
+    this.#uiController.fleetReturnOptn.addEventListener("click", () => {
       this.#loadScene("menu-scene");
       this.#uiController.cleanBoardById("player-placement-board");
     });
@@ -40,8 +40,8 @@ export class GameController {
 
   #onEnterFleetPlacementScene() {
     this.#renderPlacingGameboard();
-    this.#assignFleetPlacementEventHandlers();
     this.#uiController.renderDraggableShips(this.#player1.fleet);
+    this.#assignShipDragEventHandlers();
   }
 
   #renderPlacingGameboard() {
@@ -52,8 +52,8 @@ export class GameController {
     );
   }
 
-  #assignFleetPlacementEventHandlers() {
-    this.#uiController.DomPositions.forEach((p) => {
+  #assignShipDragEventHandlers() {
+    this.#uiController.playerGameboardPositions.forEach((p) => {
       p.addEventListener("pointerup", () => {
         const selectedShip = this.#uiController.selectedShip;
         if (selectedShip === undefined) return;
