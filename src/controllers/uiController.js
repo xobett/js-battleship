@@ -63,10 +63,6 @@ export class UiController {
     this.#handleDrag();
   }
 
-  setDragValidity(value) {
-    this.#canDrag = value;
-  }
-
   #handleDrag() {
     document.addEventListener("pointerdown", () => {
       this.#mouseHeld = true;
@@ -76,7 +72,7 @@ export class UiController {
       this.#mouseHeld = false;
       document.body.style.userSelect = "initial";
       document.body.style.cursor = "initial";
-      this.#cleanDragVisuals();
+      this.cleanDragVisuals();
 
       if (this.#selectedShip !== undefined) this.clearSelectedShip();
     });
@@ -91,17 +87,29 @@ export class UiController {
       this.#selectedShip.style.left = e.clientX + "px";
       this.#selectedShip.style.transform = "translate(-50%,-100%)";
       document.body.style.cursor = "grabbing";
+    });
+  }
 
-      this.#cleanDragVisuals();
-      this.playerGameboardPositions.forEach((p) => {
-        if (this.#canDrag) {
-          this.#currentValidClass = this.#validDragClass;
-        } else {
-          this.#currentValidClass = this.#invalidDragClass;
-        }
-        if (this.#isOverlapping(this.#selectedShip, p))
-          p.classList.add(this.#currentValidClass);
-      });
+  renderPlacingPath(canPlace, placingPath) {
+    this.cleanDragVisuals();
+    this.#canDrag = canPlace;
+
+    if (this.#canDrag) {
+      this.#currentValidClass = this.#validDragClass;
+    } else {
+      this.#currentValidClass = this.#invalidDragClass;
+    }
+
+    placingPath.forEach((coordinate) => {
+      const [row, column] = coordinate;
+      try {
+        const position = document.querySelector(
+          `.position[data-coordinates="[${row},${column}]"]`,
+        );
+        position.classList.add(this.#currentValidClass);
+      } catch (error) {
+        console.log(error);
+      }
     });
   }
 
@@ -171,20 +179,7 @@ export class UiController {
     }
   }
 
-  #isOverlapping(a, b) {
-    const aRect = a.getBoundingClientRect();
-    const bRect = b.getBoundingClientRect();
-
-    const isOnRange =
-      aRect.left > bRect.left &&
-      aRect.right < bRect.right &&
-      aRect.bottom > bRect.top &&
-      aRect.top < bRect.bottom;
-
-    return isOnRange;
-  }
-
-  #cleanDragVisuals() {
+  cleanDragVisuals() {
     this.playerGameboardPositions.forEach((e) => {
       e.classList.remove(this.#validDragClass);
       e.classList.remove(this.#invalidDragClass);

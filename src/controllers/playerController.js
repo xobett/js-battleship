@@ -27,7 +27,7 @@ export class PlayerController {
   }
 
   placeShip(ship, coordinates, axis) {
-    return this.#gameboard.placeShip(ship, coordinates, axis);
+    this.#gameboard.placeShip(ship, coordinates, axis);
   }
 
   randomlyPlaceFleet() {

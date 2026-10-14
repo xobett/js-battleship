@@ -39,19 +39,31 @@ export class Gameboard {
 
   canPlaceShip(ship, coordinates, axis) {
     const [row, column] = coordinates;
-    if (!this.#isValidCoordinate(row) || !this.#isValidCoordinate(column))
-      return new Error("Invalid placing coordinates");
-
     const [endRow, endColumn] = [
       row + (axis === Axis.vertical ? ship.size - 1 : 0),
       column + (axis === Axis.horizontal ? ship.size - 1 : 0),
     ];
 
+    let placingPath = [];
+    if (axis === Axis.vertical) {
+      for (let i = row; i <= endRow; i++) {
+        if (!this.#isValidCoordinate(i)) break;
+        placingPath.push([i, column]);
+      }
+    } else {
+      for (let i = column; i <= endColumn; i++) {
+        if (!this.#isValidCoordinate(i)) break;
+        placingPath.push([row, i]);
+      }
+    }
+
     if (
+      !this.#isValidCoordinate(row) ||
+      !this.#isValidCoordinate(column) ||
       !this.#isValidCoordinate(endRow) ||
       !this.#isValidCoordinate(endColumn)
     ) {
-      return false;
+      return { canPlace: false, placingPath };
     }
 
     let collisionedWithExisting = false;
@@ -73,9 +85,11 @@ export class Gameboard {
       }
     }
 
-    if (collisionedWithExisting) return false;
+    if (collisionedWithExisting) {
+      return { canPlace: false, placingPath };
+    }
 
-    return true;
+    return { canPlace: true, placingPath };
   }
 
   placeShip(ship, coordinates, axis) {
@@ -98,7 +112,6 @@ export class Gameboard {
     }
 
     this.#ships.push(ship);
-    console.log("success");
   }
 
   randomlyPlaceShip(ship) {

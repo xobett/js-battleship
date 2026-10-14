@@ -64,8 +64,11 @@ export class GameController {
         const coordinates = JSON.parse(currCellData.coordinates);
         const axis = selectedShip.dataset.axis;
 
-        const canPlace = this.#player1.canPlaceShip(ship, coordinates, axis);
-        this.#uiController.setDragValidity(canPlace);
+        const { canPlace } = this.#player1.canPlaceShip(
+          ship,
+          coordinates,
+          axis,
+        );
 
         if (canPlace) {
           this.#player1.placeShip(ship, coordinates, axis);
@@ -84,8 +87,20 @@ export class GameController {
         const coordinates = JSON.parse(currCellData.coordinates);
         const axis = selectedShip.dataset.axis;
 
-        const canPlace = this.#player1.canPlaceShip(ship, coordinates, axis);
-        this.#uiController.setDragValidity(canPlace);
+        const { canPlace, placingPath } = this.#player1.canPlaceShip(
+          ship,
+          coordinates,
+          axis,
+        );
+        console.log(placingPath);
+        this.#uiController.renderPlacingPath(canPlace, placingPath);
+      });
+
+      p.addEventListener("pointerleave", () => {
+        const selectedShip = this.#uiController.selectedShip;
+        if (selectedShip === undefined) return;
+
+        this.#uiController.cleanDragVisuals();
       });
     });
   }
