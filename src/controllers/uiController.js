@@ -1,6 +1,7 @@
 import "../css/bg-waves.css";
 import "../css/header.css";
 import "../css/main.css";
+import "../css/cursorFollow.css";
 import "../css//scenes/intro.css";
 import "../css//scenes/menu.css";
 import "../css/scenes/gameplay.css";
@@ -16,6 +17,10 @@ export class UiController {
   #validDragClass = "validDrag";
   #invalidDragClass = "invalidDrag";
   #currentValidClass = undefined;
+
+  #followableIcons = [];
+
+  constructor() {}
 
   get selectedShip() {
     return this.#selectedShip;
@@ -46,24 +51,28 @@ export class UiController {
     return document.querySelectorAll(".fleet-container .ship");
   }
 
-  cleanBoardById(id) {
-    try {
-      const board = document.getElementById(id);
-      board.replaceChildren();
-    } catch {
-      console.error(`No element with the id of ${id} exists`);
-    }
-  }
-
-  constructor() {
-    this.#gameScenes = document.querySelectorAll(".game-scene");
-  }
-
   init() {
-    this.#handleDrag();
+    this.#onInitConfigure();
   }
 
-  #handleDrag() {
+  #onInitConfigure() {
+    this.#gameScenes = document.querySelectorAll(".game-scene");
+    this.#configureDrag();
+    this.#configureCursorFollow();
+  }
+
+  #configureCursorFollow() {
+    document.addEventListener("mousemove", (e) => {
+      const y = e.clientY;
+      const x = e.clientX;
+      this.#followableIcons.forEach((i) => {
+        i.style.top = `${y}px`;
+        i.style.left = `${x}px`;
+      });
+    });
+  }
+
+  #configureDrag() {
     document.addEventListener("pointerdown", () => {
       this.#mouseHeld = true;
     });
@@ -90,32 +99,14 @@ export class UiController {
     });
   }
 
-  renderPlacingPath(canPlace, placingPath) {
-    this.cleanDragVisuals();
-    this.#canDrag = canPlace;
-
-    if (this.#canDrag) {
-      this.#currentValidClass = this.#validDragClass;
-    } else {
-      this.#currentValidClass = this.#invalidDragClass;
+  loadSceneById(sceneId) {
+    this.#gameScenes.forEach((scene) => scene.classList.remove("active"));
+    try {
+      const scene = document.getElementById(sceneId);
+      scene.classList.add("active");
+    } catch {
+      console.error(`No element with the id of ${sceneId} exists`);
     }
-
-    placingPath.forEach((coordinate) => {
-      const [row, column] = coordinate;
-      try {
-        const position = document.querySelector(
-          `.position[data-coordinates="[${row},${column}]"]`,
-        );
-        position.classList.add(this.#currentValidClass);
-      } catch (error) {
-        console.log(error);
-      }
-    });
-  }
-
-  clearSelectedShip() {
-    this.#selectedShip.remove();
-    this.#selectedShip = undefined;
   }
 
   renderPlayerBoard(selector, gameboardPositions) {
@@ -137,13 +128,12 @@ export class UiController {
     }
   }
 
-  loadSceneById(sceneId) {
-    this.#gameScenes.forEach((scene) => scene.classList.remove("active"));
+  cleanBoardById(id) {
     try {
-      const scene = document.getElementById(sceneId);
-      scene.classList.add("active");
+      const board = document.getElementById(id);
+      board.replaceChildren();
     } catch {
-      console.error(`No element with the id of ${sceneId} exists`);
+      console.error(`No element with the id of ${id} exists`);
     }
   }
 
@@ -155,6 +145,7 @@ export class UiController {
       img.src = currShip.spriteSrc;
       currContainer.append(img);
 
+      img.dataset.color = currShip.color;
       img.dataset.selected = false;
       img.dataset.shipName = currShip.name;
       img.dataset.axis = this.#currentRotation;
@@ -175,8 +166,51 @@ export class UiController {
 
         document.body.append(clone);
         this.#selectedShip = clone;
+
+        for (let i = 0; i < currShip.size; i++) {
+          const x = e.clientX;
+          const y = e.clientY;
+
+          const followableIcon = document.createElement("div");
+          followableIcon.classList.add("cursor-follow");
+
+          followableIcon.style.transitionDelay = `${Number(i * 0.001)}s`;
+          followableIcon.style.animationDelay = `${Number(i * 0.1)}s`;
+          followableIcon.style.top = `${y}px`;
+          followableIcon.style.left = `${x}px`;
+          this.#followableIcons.push(followableIcon);
+          document.body.append(followableIcon);
+        }
       });
     }
+  }
+
+  clearSelectedShip() {
+    this.#selectedShip.remove();
+    this.#selectedShip = undefined;
+  }
+
+  renderPlacingPath(canPlace, placingPath) {
+    this.cleanDragVisuals();
+    this.#canDrag = canPlace;
+
+    if (this.#canDrag) {
+      this.#currentValidClass = this.#validDragClass;
+    } else {
+      this.#currentValidClass = this.#invalidDragClass;
+    }
+
+    placingPath.forEach((coordinate) => {
+      const [row, column] = coordinate;
+      try {
+        const position = document.querySelector(
+          `.position[data-coordinates="[${row},${column}]"]`,
+        );
+        position.classList.add(this.#currentValidClass);
+      } catch (error) {
+        console.log(error);
+      }
+    });
   }
 
   cleanDragVisuals() {

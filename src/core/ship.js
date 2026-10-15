@@ -2,9 +2,10 @@ export class Ship extends EventTarget {
   #name = undefined;
   #size = undefined;
   #timesHit = 0;
+  color = undefined;
   spriteSrc = undefined;
 
-  constructor(name, size, spriteSrc) {
+  constructor(name, size, spriteSrc, color) {
     super();
     if (name === undefined || size === undefined)
       throw new Error("Name and size are required");
@@ -12,6 +13,7 @@ export class Ship extends EventTarget {
     this.#name = name;
     this.#size = size;
     this.spriteSrc = spriteSrc;
+    this.color = color;
   }
 
   get name() {

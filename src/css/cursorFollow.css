@@ -1,0 +1,65 @@
+div.cursor-follow,
+#cursor-follow.cursor-follow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 100px;
+  width: 40px;
+  height: 40px;
+  background-color: rgba(108, 0, 108, 0.423);
+  transition: all 1s
+    linear(
+      0,
+      0.197 4%,
+      0.373 8.1%,
+      0.529 12.3%,
+      0.667 16.7%,
+      0.727 18.9%,
+      0.783 21.2%,
+      0.834 23.5%,
+      0.88 25.8%,
+      0.921 28.2%,
+      0.958 30.6%,
+      0.991 33.1%,
+      1.019 35.7%,
+      1.039 37.9%,
+      1.056 40.1%,
+      1.071 42.4%,
+      1.082 44.7%,
+      1.09 47.1%,
+      1.096 49.6%,
+      1.099 52.2%,
+      1.1 54.9%,
+      1.095 59.4%,
+      1.084 64.4%,
+      1.07 69.2%,
+      1.031 81.2%,
+      1.013 87.7%,
+      1.003 93.9%,
+      1
+    );
+  pointer-events: none;
+
+  transform: translateX(-50%) translateY(-50%) scale(0);
+  z-index: 100;
+
+  animation: intro 0.2s ease-out both;
+}
+
+@keyframes intro {
+  0% {
+    transform: translateX(-50%) translateY(-50%) scale(0);
+  }
+  25% {
+    transform: translateX(-50%) translateY(-50%) scale(1.1);
+  }
+  50% {
+    transform: translateX(-50%) translateY(-50%) scale(1.5);
+  }
+  75% {
+    transform: translateX(-50%) translateY(-50%) scale(1.1);
+  }
+  100% {
+    transform: translateX(-50%) translateY(-50%) scale(1);
+  }
+}

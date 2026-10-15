@@ -11,32 +11,37 @@ export const FleetLoadouts = (() => {
       name: "Carrier",
       size: 5,
       spriteSrc: Carrier,
+      color: "yellow",
     },
     battleship: {
       name: "Battleship",
       size: 4,
       spriteSrc: Battleship,
+      color: "red",
     },
     destroyer: {
       name: "Destroyer",
       size: 3,
       spriteSrc: Destroyer,
+      color: "green",
     },
     submarine: {
       name: "Submarine",
       size: 3,
       spriteSrc: Submarine,
+      color: "blue",
     },
     patrolBoat: {
       name: "Patrol boat",
       size: 2,
       spriteSrc: PatrolBoat,
+      color: "purple",
     },
   };
 
   const starterFleet = [];
   for (const s of Object.values(starter)) {
-    starterFleet.push(new Ship(s.name, s.size, s.spriteSrc));
+    starterFleet.push(new Ship(s.name, s.size, s.spriteSrc, s.color));
   }
 
   return { starterFleet };
