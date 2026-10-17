@@ -3,6 +3,7 @@ import { Player } from "../core/player.js";
 export class GameController {
   #uiController;
   #player1 = undefined;
+  #currentAxis = "vertical";
 
   constructor(uiController) {
     this.#uiController = uiController;
@@ -60,11 +61,11 @@ export class GameController {
 
         const currCellData = e.target.dataset;
 
-        const ship = this.#player1.ship(selectedShip.dataset.shipName);
+        const ship = this.#player1.ship(selectedShip.name);
         const coordinates = JSON.parse(currCellData.coordinates);
-        const axis = selectedShip.dataset.axis;
+        const axis = this.#currentAxis;
 
-        const { canPlace } = this.#player1.canPlaceShip(
+        const { canPlace, placingPath } = this.#player1.canPlaceShip(
           ship,
           coordinates,
           axis,
@@ -72,6 +73,7 @@ export class GameController {
 
         if (canPlace) {
           this.#player1.placeShip(ship, coordinates, axis);
+          this.#uiController.renderPlacedPositions(ship, placingPath);
         }
 
         this.#uiController.clearSelectedShip();
@@ -83,17 +85,16 @@ export class GameController {
 
         const currCellData = e.target.dataset;
 
-        const ship = this.#player1.ship(selectedShip.dataset.shipName);
+        const ship = this.#player1.ship(selectedShip.name);
         const coordinates = JSON.parse(currCellData.coordinates);
-        const axis = selectedShip.dataset.axis;
+        const axis = this.#currentAxis;
 
         const { canPlace, placingPath } = this.#player1.canPlaceShip(
           ship,
           coordinates,
           axis,
         );
-        console.log(placingPath);
-        this.#uiController.renderPlacingPath(canPlace, placingPath);
+        this.#uiController.renderCanPlacePath(canPlace, placingPath);
       });
 
       p.addEventListener("pointerleave", () => {

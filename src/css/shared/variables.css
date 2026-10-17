@@ -6,5 +6,15 @@
   --pos-hvr-clr: #9b7474;
   --pos-act-clr: #fff;
 
+  --carrier-bg-color: linear-gradient(#4bc099, #323336);
+
+  --battleship-bg-color: linear-gradient(#c0894b, #323336);
+
+  --destroyer-bg-color: linear-gradient(#c04b4b, #323336);
+
+  --submarine-bg-color: linear-gradient(#2f3fd3, #323336);
+
+  --patrolboat-bg-color: linear-gradient(#c04ba7, #323336);
+
   --icon-size: 2rem;
 }

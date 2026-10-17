@@ -1,7 +1,7 @@
 import "../css/bg-waves.css";
 import "../css/header.css";
 import "../css/main.css";
-import "../css/cursorFollow.css";
+import "../css/dragging-ship-dot.css";
 import "../css//scenes/intro.css";
 import "../css//scenes/menu.css";
 import "../css/scenes/gameplay.css";
@@ -10,8 +10,6 @@ import "../css/scenes/fleet-placement.css";
 export class UiController {
   #gameScenes = [];
   #selectedShip = undefined;
-  #mouseHeld = false;
-  #currentRotation = "vertical";
 
   #canDrag = false;
   #validDragClass = "validDrag";
@@ -73,29 +71,9 @@ export class UiController {
   }
 
   #configureDrag() {
-    document.addEventListener("pointerdown", () => {
-      this.#mouseHeld = true;
-    });
-
     document.addEventListener("pointerup", () => {
-      this.#mouseHeld = false;
-      document.body.style.userSelect = "initial";
-      document.body.style.cursor = "initial";
       this.cleanDragVisuals();
-
       if (this.#selectedShip !== undefined) this.clearSelectedShip();
-    });
-
-    document.addEventListener("pointermove", (e) => {
-      if (!this.#mouseHeld) return;
-      if (this.#selectedShip === undefined) return;
-
-      document.body.style.userSelect = "none";
-      this.#selectedShip.style.position = "absolute";
-      this.#selectedShip.style.top = e.clientY + "px";
-      this.#selectedShip.style.left = e.clientX + "px";
-      this.#selectedShip.style.transform = "translate(-50%,-100%)";
-      document.body.style.cursor = "grabbing";
     });
   }
 
@@ -141,56 +119,53 @@ export class UiController {
     for (let i = 0; i < this.shipContainers.length; i++) {
       const currContainer = this.shipContainers[i];
       const currShip = playerFleet[i];
-      const img = document.createElement("img");
-      img.src = currShip.spriteSrc;
-      currContainer.append(img);
 
-      img.dataset.color = currShip.color;
-      img.dataset.selected = false;
-      img.dataset.shipName = currShip.name;
-      img.dataset.axis = this.#currentRotation;
-      img.style.pointerEvents = "none";
+      const shipVisual = document.createElement("div");
+      shipVisual.dataset.ship = currShip.name
+        .toString()
+        .toLowerCase()
+        .replace(/\s/g, "");
+      shipVisual.classList.add("dragging-ship-dot", "static");
+
+      const shipNameText = document.createElement("span");
+      shipNameText.textContent = currShip.name;
+
+      currContainer.append(shipVisual, shipNameText);
 
       currContainer.addEventListener("pointerdown", (e) => {
-        const img = e.target.firstChild;
-        const clone = img.cloneNode();
-
-        clone.style.position = "absolute";
-        clone.style.top = e.clientY + "px";
-        clone.style.left = e.clientX + "px";
-
-        if (currShip.name === "Carrier") {
-          clone.style.width = "41px";
-          clone.style.height = "200px";
-        }
-
-        document.body.append(clone);
-        this.#selectedShip = clone;
+        this.#selectedShip = currShip;
 
         for (let i = 0; i < currShip.size; i++) {
           const x = e.clientX;
           const y = e.clientY;
 
-          const followableIcon = document.createElement("div");
-          followableIcon.classList.add("cursor-follow");
+          const draggingShipDot = document.createElement("div");
+          draggingShipDot.classList.add("dragging-ship-dot");
 
-          followableIcon.style.transitionDelay = `${Number(i * 0.001)}s`;
-          followableIcon.style.animationDelay = `${Number(i * 0.1)}s`;
-          followableIcon.style.top = `${y}px`;
-          followableIcon.style.left = `${x}px`;
-          this.#followableIcons.push(followableIcon);
-          document.body.append(followableIcon);
+          draggingShipDot.style.transitionDelay = `${Number(i * 0.001)}s`;
+          draggingShipDot.style.animationDelay = `${Number(i * 0.1)}s`;
+          draggingShipDot.style.top = `${y}px`;
+          draggingShipDot.style.left = `${x}px`;
+
+          draggingShipDot.dataset.ship = currShip.name
+            .toString()
+            .toLowerCase()
+            .replace(/\s/g, "");
+
+          this.#followableIcons.push(draggingShipDot);
+          document.body.append(draggingShipDot);
         }
       });
     }
   }
 
   clearSelectedShip() {
-    this.#selectedShip.remove();
     this.#selectedShip = undefined;
+    this.#followableIcons.forEach((i) => i.remove());
+    this.#followableIcons = [];
   }
 
-  renderPlacingPath(canPlace, placingPath) {
+  renderCanPlacePath(canPlace, placingPath) {
     this.cleanDragVisuals();
     this.#canDrag = canPlace;
 
@@ -211,6 +186,31 @@ export class UiController {
         console.log(error);
       }
     });
+  }
+
+  renderPlacedPositions(ship, placingPath) {
+    for (let i = 0; i < placingPath.length; i++) {
+      const coordinate = placingPath[i];
+      const [row, column] = coordinate;
+      try {
+        const position = document.querySelector(
+          `.position[data-coordinates="[${row},${column}]"]`,
+        );
+        position.classList.add(this.#currentValidClass);
+
+        const draggingShipDot = document.createElement("div");
+        draggingShipDot.classList.add("dragging-ship-dot", "static");
+        draggingShipDot.style.animationDelay = `${Number(i * 0.1)}s`;
+        draggingShipDot.dataset.ship = ship.name
+          .toString()
+          .toLowerCase()
+          .replace(/\s/g, "");
+
+        position.append(draggingShipDot);
+      } catch (error) {
+        console.log(error);
+      }
+    }
   }
 
   cleanDragVisuals() {

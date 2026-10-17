@@ -1,12 +1,20 @@
-div.cursor-follow,
-#cursor-follow.cursor-follow {
+div.dragging-ship-dot.static {
+  position: static;
+  transform: initial;
+  animation: placed 0.2s ease-out both;
+}
+
+div.dragging-ship-dot {
+  border: unset;
+  background: unset;
+
+  border: 2px solid #fff;
   position: absolute;
   top: 0;
   left: 0;
   border-radius: 100px;
   width: 40px;
   height: 40px;
-  background-color: rgba(108, 0, 108, 0.423);
   transition: all 1s
     linear(
       0,
@@ -46,6 +54,22 @@ div.cursor-follow,
   animation: intro 0.2s ease-out both;
 }
 
+div.dragging-ship-dot[data-ship="carrier"] {
+  background: var(--carrier-bg-color);
+}
+div.dragging-ship-dot[data-ship="battleship"] {
+  background: var(--battleship-bg-color);
+}
+div.dragging-ship-dot[data-ship="destroyer"] {
+  background: var(--destroyer-bg-color);
+}
+div.dragging-ship-dot[data-ship="submarine"] {
+  background: var(--submarine-bg-color);
+}
+div.dragging-ship-dot[data-ship="patrolboat"] {
+  background: var(--patrolboat-bg-color);
+}
+
 @keyframes intro {
   0% {
     transform: translateX(-50%) translateY(-50%) scale(0);
@@ -61,5 +85,23 @@ div.cursor-follow,
   }
   100% {
     transform: translateX(-50%) translateY(-50%) scale(1);
+  }
+}
+
+@keyframes placed {
+  0% {
+    transform: scale(0);
+  }
+  25% {
+    transform: scale(1.1);
+  }
+  50% {
+    transform: scale(1.5);
+  }
+  75% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
   }
 }

@@ -2,8 +2,6 @@ export class Ship extends EventTarget {
   #name = undefined;
   #size = undefined;
   #timesHit = 0;
-  color = undefined;
-  spriteSrc = undefined;
 
   constructor(name, size, spriteSrc, color) {
     super();
@@ -12,7 +10,6 @@ export class Ship extends EventTarget {
 
     this.#name = name;
     this.#size = size;
-    this.spriteSrc = spriteSrc;
     this.color = color;
   }
 
