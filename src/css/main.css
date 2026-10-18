@@ -15,11 +15,6 @@ body {
   overflow: hidden;
 }
 
-body:active {
-  cursor: grabbing;
-  user-select: none;
-}
-
 .game-scene {
   display: none;
 }

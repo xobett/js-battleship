@@ -71,8 +71,19 @@ export class UiController {
   }
 
   #configureDrag() {
+    document.addEventListener("pointermove", () => {
+      if (this.#selectedShip === undefined) return;
+
+      document.body.style.userSelect = "none";
+      document.body.style.cursor = "grabbing";
+    });
+
     document.addEventListener("pointerup", () => {
       this.cleanDragVisuals();
+
+      document.body.style.userSelect = "initial";
+      document.body.style.cursor = "initial";
+
       if (this.#selectedShip !== undefined) this.clearSelectedShip();
     });
   }
@@ -119,6 +130,9 @@ export class UiController {
     for (let i = 0; i < this.shipContainers.length; i++) {
       const currContainer = this.shipContainers[i];
       const currShip = playerFleet[i];
+
+      currContainer.dataset.placed = false;
+      currContainer.dataset.shipName = currShip.name;
 
       const shipVisual = document.createElement("div");
       shipVisual.dataset.ship = currShip.name
@@ -210,6 +224,19 @@ export class UiController {
       } catch (error) {
         console.log(error);
       }
+    }
+  }
+
+  refreshAvailableShips(name) {
+    try {
+      const container = [...this.shipContainers].find(
+        (c) => c.dataset.shipName === name,
+      );
+      container.style.backgroundColor = "red";
+      container.style.pointerEvents = "none";
+    } catch (error) {
+      console.log(error);
+      console.log("No ship was found to mark as placed");
     }
   }
 

@@ -60,6 +60,7 @@ export class GameController {
         if (selectedShip === undefined) return;
 
         const currCellData = e.target.dataset;
+        if (this.#player1.alreadyPlacedShip(selectedShip.name)) return;
 
         const ship = this.#player1.ship(selectedShip.name);
         const coordinates = JSON.parse(currCellData.coordinates);
@@ -74,6 +75,7 @@ export class GameController {
         if (canPlace) {
           this.#player1.placeShip(ship, coordinates, axis);
           this.#uiController.renderPlacedPositions(ship, placingPath);
+          this.#uiController.refreshAvailableShips(ship.name);
         }
 
         this.#uiController.clearSelectedShip();
@@ -84,6 +86,7 @@ export class GameController {
         if (selectedShip === undefined) return;
 
         const currCellData = e.target.dataset;
+        if (this.#player1.alreadyPlacedShip(selectedShip.name)) return;
 
         const ship = this.#player1.ship(selectedShip.name);
         const coordinates = JSON.parse(currCellData.coordinates);

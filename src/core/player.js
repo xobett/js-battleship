@@ -21,6 +21,10 @@ export class Player {
     return this.#controller.gameboard.entireFleetIsSunk();
   }
 
+  alreadyPlacedShip(name) {
+    return this.#controller.alreadyPlacedShip(name);
+  }
+
   canPlaceShip(ship, coordinates, axis) {
     return this.#controller.canPlaceShip(ship, coordinates, axis);
   }

@@ -14,6 +14,10 @@ export class Gameboard {
     return this.#positions;
   }
 
+  hasShip(name) {
+    return this.#ships.some((ship) => ship.name === name);
+  }
+
   #buildBoard() {
     for (let i = 0; i < this.#size; i++) {
       const row = [];
