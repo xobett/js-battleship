@@ -41,6 +41,11 @@ export class Gameboard {
     return allSunk;
   }
 
+  clear() {
+    this.#positions = [];
+    this.#buildBoard();
+  }
+
   canPlaceShip(ship, coordinates, axis) {
     const [row, column] = coordinates;
     const [endRow, endColumn] = [
@@ -100,7 +105,7 @@ export class Gameboard {
     const [row, column] = coordinates;
     const [endRow, endColumn] = [
       row + (axis === Axis.vertical ? ship.size - 1 : 0),
-      column + (axis === Axis.vertical ? ship.size - 1 : 0),
+      column + (axis === Axis.horizontal ? ship.size - 1 : 0),
     ];
 
     if (axis === Axis.vertical) {
@@ -119,7 +124,6 @@ export class Gameboard {
   }
 
   randomlyPlaceShip(ship) {
-    // TODO: FIX
     let placed = false;
     while (!placed) {
       const [randomRow, randomColumn] = [

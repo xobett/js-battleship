@@ -12,6 +12,7 @@ export class GameController {
   init() {
     this.#uiController.init();
     this.#configureNavigation();
+    this.#configureFleetPlacementBtns();
     this.#player1 = new Player("Cesar");
   }
 
@@ -31,8 +32,21 @@ export class GameController {
 
     this.#uiController.fleetReturnOptn.addEventListener("click", () => {
       this.#loadScene("menu-scene");
-      this.#uiController.cleanBoardById("player-placement-board");
+      this.#uiController.clearBoardById("player-placement-board");
+      this.#uiController.clearDraggableShips();
     });
+  }
+
+  #configureFleetPlacementBtns() {
+    this.#uiController.rotateShipBtn.addEventListener("click", () => {
+      this.#toggleCurrentRotation();
+      this.#uiController.updateAxisDirection(this.#currentAxis);
+    });
+  }
+
+  #toggleCurrentRotation() {
+    if (this.#currentAxis === "vertical") this.#currentAxis = "horizontal";
+    else this.#currentAxis = "vertical";
   }
 
   #loadScene(scene) {

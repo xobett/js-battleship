@@ -6,6 +6,7 @@ import "../css//scenes/intro.css";
 import "../css//scenes/menu.css";
 import "../css/scenes/gameplay.css";
 import "../css/scenes/fleet-placement.css";
+import { Axis } from "../enums/axis.js";
 
 export class UiController {
   #gameScenes = [];
@@ -47,6 +48,13 @@ export class UiController {
   }
   get shipContainers() {
     return document.querySelectorAll(".fleet-container .ship");
+  }
+
+  get rotateShipBtn() {
+    return document.getElementById("rotate-ship-btn");
+  }
+  get randomPlaceShipBtn() {
+    return document.getElementById("random-place-ship-btn");
   }
 
   init() {
@@ -117,7 +125,7 @@ export class UiController {
     }
   }
 
-  cleanBoardById(id) {
+  clearBoardById(id) {
     try {
       const board = document.getElementById(id);
       board.replaceChildren();
@@ -171,6 +179,10 @@ export class UiController {
         }
       });
     }
+  }
+
+  clearDraggableShips() {
+    this.shipContainers.forEach((sC) => sC.replaceChildren());
   }
 
   clearSelectedShip() {
@@ -234,6 +246,7 @@ export class UiController {
       );
       container.style.backgroundColor = "red";
       container.style.pointerEvents = "none";
+      container.firstChild.dataset.placed = true;
     } catch (error) {
       console.log(error);
       console.log("No ship was found to mark as placed");
@@ -244,6 +257,22 @@ export class UiController {
     this.playerGameboardPositions.forEach((e) => {
       e.classList.remove(this.#validDragClass);
       e.classList.remove(this.#invalidDragClass);
+    });
+  }
+
+  updateAxisDirection(axis) {
+    const ships = document.querySelectorAll(
+      ".fleet-container div.dragging-ship-dot.static",
+    );
+    console.log(ships);
+
+    let targetAxis;
+    if (axis === Axis.vertical) targetAxis = `vertical`;
+    else targetAxis = `horizontal`;
+
+    ships.forEach((s) => {
+      if (s.dataset.placed) return;
+      s.dataset.axis = targetAxis;
     });
   }
 }
