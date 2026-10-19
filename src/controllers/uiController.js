@@ -2,6 +2,7 @@ import "../css/bg-waves.css";
 import "../css/header.css";
 import "../css/main.css";
 import "../css/dragging-ship-dot.css";
+import "../css/gameboard.css";
 import "../css//scenes/intro.css";
 import "../css//scenes/menu.css";
 import "../css/scenes/gameplay.css";
@@ -106,17 +107,46 @@ export class UiController {
     }
   }
 
-  renderPlayerBoard(selector, gameboardPositions) {
+  renderGameboard(selector, gameboardPositions) {
     try {
       const domBoard = document.getElementById(selector);
 
-      for (let x = gameboardPositions.length - 1; x >= 0; x--) {
-        const currX = gameboardPositions[x];
-        for (let y = 0; y < currX.length; y++) {
+      for (let row = gameboardPositions.length - 1; row >= 0; row--) {
+        const currRow = gameboardPositions[row];
+        for (let column = 0; column < currRow.length; column++) {
           const pos = document.createElement("div");
           pos.classList.add("position");
-          pos.dataset.coordinates = `[${x},${y}]`;
+          pos.dataset.coordinates = `[${row},${column}]`;
           domBoard.append(pos);
+        }
+      }
+    } catch (e) {
+      console.error(e);
+      console.error(`No element with the id of ${selector} exists`);
+    }
+  }
+
+  renderGameplayGameboard(selector, gameboardPositions, displayShips = false) {
+    try {
+      const domBoard = document.getElementById(selector);
+
+      for (let row = gameboardPositions.length - 1; row >= 0; row--) {
+        const currRow = gameboardPositions[row];
+        for (let column = 0; column < currRow.length; column++) {
+          const currColum = currRow[column];
+          const pos = document.createElement("div");
+          pos.classList.add("position");
+          pos.dataset.coordinates = `[${row},${column}]`;
+          domBoard.append(pos);
+
+          if (displayShips) {
+            if (currColum.ship !== null) {
+              const draggingShipDot = this.#createStaticDraggingShipDot(
+                currColum.ship.name,
+              );
+              pos.append(draggingShipDot);
+            }
+          }
         }
       }
     } catch (e) {
@@ -224,14 +254,7 @@ export class UiController {
         );
         position.classList.add(this.#currentValidClass);
 
-        const draggingShipDot = document.createElement("div");
-        draggingShipDot.classList.add("dragging-ship-dot", "static");
-        draggingShipDot.style.animationDelay = `${Number(i * 0.1)}s`;
-        draggingShipDot.dataset.ship = ship.name
-          .toString()
-          .toLowerCase()
-          .replace(/\s/g, "");
-
+        const draggingShipDot = this.#createStaticDraggingShipDot(ship.name, i);
         position.append(draggingShipDot);
       } catch (error) {
         console.log(error);
@@ -265,7 +288,6 @@ export class UiController {
     );
 
     ships.forEach((s) => {
-      if (s.dataset.placed === "true") return;
       s.dataset.axis = Axis.vertical;
     });
   }
@@ -290,5 +312,21 @@ export class UiController {
       if (s.dataset.placed === "true") return;
       s.dataset.axis = targetAxis;
     });
+  }
+
+  #createStaticDraggingShipDot(shipName, delay = undefined) {
+    const draggingShipDot = document.createElement("div");
+    draggingShipDot.classList.add("dragging-ship-dot", "static");
+
+    if (delay !== undefined) {
+      draggingShipDot.style.animationDelay = `${Number(delay * 0.1)}s`;
+    }
+
+    draggingShipDot.dataset.ship = shipName
+      .toString()
+      .toLowerCase()
+      .replace(/\s/g, "");
+
+    return draggingShipDot;
   }
 }

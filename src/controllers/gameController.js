@@ -4,6 +4,7 @@ import { Axis } from "../enums/axis.js";
 export class GameController {
   #uiController;
   #player1 = undefined;
+  #cpuPlayer = undefined;
   #currentAxis = Axis.vertical;
 
   constructor(uiController) {
@@ -12,6 +13,7 @@ export class GameController {
 
   init() {
     this.#player1 = new Player("Cesar");
+    this.#cpuPlayer = new Player("CPU");
     this.#uiController.init();
     this.#configureNavigation();
     this.#configureFleetPlacementBtns();
@@ -34,6 +36,11 @@ export class GameController {
     this.#uiController.fleetReturnOptn.addEventListener("click", () => {
       this.#loadScene("menu-scene");
       this.#onReturnFromFleetPlacementScene();
+    });
+
+    this.#uiController.fleetContinueOptn.addEventListener("click", () => {
+      this.#loadScene("gameplay-scene");
+      this.#onEnterGameplayScene();
     });
   }
 
@@ -80,9 +87,27 @@ export class GameController {
     this.#currentAxis = Axis.vertical;
   }
 
+  #onEnterGameplayScene() {
+    this.#cpuPlayer.randomPlaceFleet();
+
+    const playerGameboardPos = this.#player1.gameboardPositions;
+    const cpuGameboardPos = this.#cpuPlayer.gameboardPositions;
+
+    this.#uiController.renderGameplayGameboard(
+      "player-board",
+      playerGameboardPos,
+      true,
+    );
+    this.#uiController.renderGameplayGameboard(
+      "cpu-board",
+      cpuGameboardPos,
+      true,
+    );
+  }
+
   #renderPlacingGameboard() {
     const gameboardPositions = this.#player1.gameboardPositions;
-    this.#uiController.renderPlayerBoard(
+    this.#uiController.renderGameboard(
       "player-placement-board",
       gameboardPositions,
     );

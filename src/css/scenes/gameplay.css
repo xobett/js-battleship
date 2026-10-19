@@ -1,0 +1,59 @@
+#gameplay-scene.active {
+  display: grid;
+  padding-top: 50px;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 30px 1fr;
+
+  width: 100%;
+  height: 100%;
+}
+
+.player-container,
+.cpu-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+}
+
+#gameplay-scene .cpu-container .position::before {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  content: "";
+  background-color: unset;
+  border: 3px solid transparent;
+  border-radius: unset;
+
+  transition: all 0.1s ease;
+}
+
+#gameplay-scene .cpu-container .position:hover::before {
+  background-color: rgba(255, 23, 23, 0.801);
+  border: 3px solid #860000e3;
+  border-radius: 7px;
+  transform: scale(1);
+}
+
+#gameplay-scene .cpu-container .position:active::before {
+  background-color: rgb(255, 0, 0);
+  border: 3px solid #fff0f0e3;
+  border-radius: 7px;
+
+  transform: scale(0.9);
+}
+
+#gameplay-scene .cpu-container:hover {
+  cursor: crosshair;
+}
+
+#gameplay-message-container {
+  display: flex;
+  justify-content: center;
+  grid-column: 1/3;
+
+  z-index: 100;
+
+  font-size: 1.3rem;
+}

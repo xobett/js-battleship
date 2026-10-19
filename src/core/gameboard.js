@@ -134,8 +134,8 @@ export class Gameboard {
       const randomPos = [randomRow, randomColumn];
       const randomAxis = this.#getRandomAxis();
 
-      const success = this.canPlaceShip(ship, randomPos, randomAxis);
-      if (success) {
+      const { canPlace } = this.canPlaceShip(ship, randomPos, randomAxis);
+      if (canPlace) {
         this.placeShip(ship, randomPos, randomAxis);
         placed = true;
       }

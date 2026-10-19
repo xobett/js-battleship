@@ -5,8 +5,18 @@ export class Player {
   avatar = undefined;
   #controller = null;
 
+  constructor(name) {
+    if (name === undefined) throw new Error("Name is required");
+    this.name = name;
+    this.#controller = new PlayerController();
+  }
+
   get fleet() {
     return this.#controller.fleet;
+  }
+
+  randomPlaceFleet() {
+    this.#controller.randomPlaceFleet();
   }
 
   getRandomAttackPos() {
@@ -50,11 +60,5 @@ export class Player {
 
   get gameboardPositions() {
     return this.#controller.gameboardPositions;
-  }
-
-  constructor(name) {
-    if (name === undefined) throw new Error("Name is required");
-    this.name = name;
-    this.#controller = new PlayerController();
   }
 }
