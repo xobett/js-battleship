@@ -53,8 +53,8 @@ export class UiController {
   get rotateShipBtn() {
     return document.getElementById("rotate-ship-btn");
   }
-  get randomPlaceShipBtn() {
-    return document.getElementById("random-place-ship-btn");
+  get restartGameboardBtn() {
+    return document.getElementById("restart-gameboard-btn");
   }
 
   init() {
@@ -239,7 +239,7 @@ export class UiController {
     }
   }
 
-  refreshAvailableShips(name) {
+  disableDraggableShip(name) {
     try {
       const container = [...this.shipContainers].find(
         (c) => c.dataset.shipName === name,
@@ -253,6 +253,23 @@ export class UiController {
     }
   }
 
+  enableAllDraggableShips() {
+    this.shipContainers.forEach((c) => {
+      c.style.backgroundColor = "unset";
+      c.style.pointerEvents = "initial";
+      c.firstChild.dataset.placed = false;
+    });
+
+    const ships = document.querySelectorAll(
+      ".fleet-container div.dragging-ship-dot.static",
+    );
+
+    ships.forEach((s) => {
+      if (s.dataset.placed === "true") return;
+      s.dataset.axis = Axis.vertical;
+    });
+  }
+
   cleanDragVisuals() {
     this.playerGameboardPositions.forEach((e) => {
       e.classList.remove(this.#validDragClass);
@@ -264,14 +281,13 @@ export class UiController {
     const ships = document.querySelectorAll(
       ".fleet-container div.dragging-ship-dot.static",
     );
-    console.log(ships);
 
     let targetAxis;
-    if (axis === Axis.vertical) targetAxis = `vertical`;
-    else targetAxis = `horizontal`;
+    if (axis === Axis.vertical) targetAxis = Axis.vertical;
+    else targetAxis = Axis.horizontal;
 
     ships.forEach((s) => {
-      if (s.dataset.placed) return;
+      if (s.dataset.placed === "true") return;
       s.dataset.axis = targetAxis;
     });
   }

@@ -26,6 +26,10 @@ export class PlayerController {
     return this.#gameboard.hasShip(name);
   }
 
+  clearGameboard() {
+    this.#gameboard.clear();
+  }
+
   canPlaceShip(ship, coordinates, axis) {
     return this.#gameboard.canPlaceShip(ship, coordinates, axis);
   }

@@ -25,6 +25,10 @@ export class Player {
     return this.#controller.alreadyPlacedShip(name);
   }
 
+  clearGameboard() {
+    this.#controller.clearGameboard();
+  }
+
   canPlaceShip(ship, coordinates, axis) {
     return this.#controller.canPlaceShip(ship, coordinates, axis);
   }

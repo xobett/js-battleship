@@ -10,10 +10,10 @@ export class GameController {
   }
 
   init() {
+    this.#player1 = new Player("Cesar");
     this.#uiController.init();
     this.#configureNavigation();
     this.#configureFleetPlacementBtns();
-    this.#player1 = new Player("Cesar");
   }
 
   #configureNavigation() {
@@ -42,6 +42,15 @@ export class GameController {
       this.#toggleCurrentRotation();
       this.#uiController.updateAxisDirection(this.#currentAxis);
     });
+
+    this.#uiController.restartGameboardBtn.addEventListener("click", () => {
+      this.#player1.clearGameboard();
+
+      this.#uiController.clearBoardById("player-placement-board");
+      this.#renderPlacingGameboard();
+      this.#assignOnShipDropEventHandlers();
+      this.#uiController.enableAllDraggableShips();
+    });
   }
 
   #toggleCurrentRotation() {
@@ -56,7 +65,7 @@ export class GameController {
   #onEnterFleetPlacementScene() {
     this.#renderPlacingGameboard();
     this.#uiController.renderDraggableShips(this.#player1.fleet);
-    this.#assignShipDragEventHandlers();
+    this.#assignOnShipDropEventHandlers();
   }
 
   #renderPlacingGameboard() {
@@ -67,7 +76,7 @@ export class GameController {
     );
   }
 
-  #assignShipDragEventHandlers() {
+  #assignOnShipDropEventHandlers() {
     this.#uiController.playerGameboardPositions.forEach((p) => {
       p.addEventListener("pointerup", (e) => {
         const selectedShip = this.#uiController.selectedShip;
@@ -89,7 +98,7 @@ export class GameController {
         if (canPlace) {
           this.#player1.placeShip(ship, coordinates, axis);
           this.#uiController.renderPlacedPositions(ship, placingPath);
-          this.#uiController.refreshAvailableShips(ship.name);
+          this.#uiController.disableDraggableShip(ship.name);
         }
 
         this.#uiController.clearSelectedShip();

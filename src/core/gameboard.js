@@ -43,6 +43,7 @@ export class Gameboard {
 
   clear() {
     this.#positions = [];
+    this.#ships = [];
     this.#buildBoard();
   }
 
