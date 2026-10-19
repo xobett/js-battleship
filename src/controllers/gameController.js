@@ -1,9 +1,10 @@
 import { Player } from "../core/player.js";
+import { Axis } from "../enums/axis.js";
 
 export class GameController {
   #uiController;
   #player1 = undefined;
-  #currentAxis = "vertical";
+  #currentAxis = Axis.vertical;
 
   constructor(uiController) {
     this.#uiController = uiController;
@@ -32,8 +33,7 @@ export class GameController {
 
     this.#uiController.fleetReturnOptn.addEventListener("click", () => {
       this.#loadScene("menu-scene");
-      this.#uiController.clearBoardById("player-placement-board");
-      this.#uiController.clearDraggableShips();
+      this.#onReturnFromFleetPlacementScene();
     });
   }
 
@@ -50,12 +50,15 @@ export class GameController {
       this.#renderPlacingGameboard();
       this.#assignOnShipDropEventHandlers();
       this.#uiController.enableAllDraggableShips();
+
+      this.#currentAxis = Axis.vertical;
     });
   }
 
   #toggleCurrentRotation() {
-    if (this.#currentAxis === "vertical") this.#currentAxis = "horizontal";
-    else this.#currentAxis = "vertical";
+    if (this.#currentAxis === Axis.vertical)
+      this.#currentAxis = Axis.horizontal;
+    else this.#currentAxis = Axis.vertical;
   }
 
   #loadScene(scene) {
@@ -64,8 +67,17 @@ export class GameController {
 
   #onEnterFleetPlacementScene() {
     this.#renderPlacingGameboard();
-    this.#uiController.renderDraggableShips(this.#player1.fleet);
     this.#assignOnShipDropEventHandlers();
+    this.#uiController.renderDraggableShips(this.#player1.fleet);
+    this.#uiController.enableAllDraggableShips();
+  }
+
+  #onReturnFromFleetPlacementScene() {
+    this.#player1.clearGameboard();
+
+    this.#uiController.clearBoardById("player-placement-board");
+    this.#uiController.clearDraggableShips();
+    this.#currentAxis = Axis.vertical;
   }
 
   #renderPlacingGameboard() {

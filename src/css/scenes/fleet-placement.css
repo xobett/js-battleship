@@ -36,6 +36,7 @@
 
 #fleet-placement-scene .advice-container li {
   display: flex;
+  align-items: center;
   gap: 30px;
 }
 
@@ -146,6 +147,17 @@
   pointer-events: none;
 }
 
+.advice-container span:has(svg) {
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  background-color: rgba(203, 228, 238, 0.24);
+  border-radius: 7px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 7px;
+}
 .input-btns-container li {
   border: 1px solid rgba(255, 255, 255, 0.6);
   background-color: rgba(203, 228, 238, 0.24);
