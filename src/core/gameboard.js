@@ -174,7 +174,7 @@ export class Gameboard {
     if (
       this.#attackedPositions.some((c) => this.#hasCoordinates(c, coordinates))
     )
-      return;
+      return null;
 
     this.#attackedPositions.push(coordinates);
 

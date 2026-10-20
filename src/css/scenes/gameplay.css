@@ -30,8 +30,8 @@
 }
 
 #gameplay-scene .cpu-container .position:hover::before {
-  background-color: rgba(255, 23, 23, 0.801);
-  border: 3px solid #860000e3;
+  background-color: rgba(255, 23, 23, 0);
+  border: 3px solid #ffffffe3;
   border-radius: 7px;
   transform: scale(1);
 }
@@ -44,7 +44,7 @@
   transform: scale(0.9);
 }
 
-#gameplay-scene .cpu-container:hover {
+#gameplay-scene .cpu-container .gameboard:hover {
   cursor: crosshair;
 }
 
@@ -56,4 +56,44 @@
   z-index: 100;
 
   font-size: 1.3rem;
+}
+
+.gameboard svg {
+  width: var(--icon-size);
+  height: var(--icon-size);
+  animation: dropBomb 0.4s ease-in both;
+}
+
+.gameboard svg[data-icon="hit"] {
+  color: red;
+}
+
+.player-container svg {
+  position: absolute;
+  z-index: 100;
+  width: va;
+}
+
+@keyframes dropBomb {
+  0% {
+    transform: scale(6);
+  }
+  25% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.1) translateX(1px);
+  }
+  60% {
+    transform: translateX(-1px);
+  }
+  70% {
+    transform: translateX(1px);
+  }
+  80% {
+    transform: translateX(-1px);
+  }
+  100% {
+    transform: scale(1) translate(0);
+  }
 }

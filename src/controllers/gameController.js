@@ -98,11 +98,33 @@ export class GameController {
       playerGameboardPos,
       true,
     );
-    this.#uiController.renderGameplayGameboard(
-      "cpu-board",
-      cpuGameboardPos,
-      true,
+    this.#uiController.renderGameplayGameboard("cpu-board", cpuGameboardPos);
+
+    this.#assignOnClickEnemyGameboardEventHandlers();
+  }
+
+  #assignOnClickEnemyGameboardEventHandlers() {
+    this.#uiController.cpuGameboardPositions.forEach((p) =>
+      p.addEventListener("pointerup", async (e) => {
+        const currCell = e.target;
+        const currCellData = e.target.dataset;
+
+        const coordinates = JSON.parse(currCellData.coordinates);
+        const hit = this.#cpuPlayer.receiveAttack(coordinates);
+        if (hit === null) return;
+        this.#uiController.onEnemyAttackedPos(hit, currCell);
+
+        await this.#receiveEnemyAttack();
+      }),
     );
+  }
+
+  #receiveEnemyAttack() {
+    setTimeout(() => {
+      const randomCoordinates = this.#player1.getRandomAttackPos();
+      const receivedHit = this.#player1.receiveAttack(randomCoordinates);
+      this.#uiController.onPlayerAttackedPos(receivedHit, randomCoordinates);
+    }, 1000);
   }
 
   #renderPlacingGameboard() {
@@ -114,7 +136,7 @@ export class GameController {
   }
 
   #assignOnShipDropEventHandlers() {
-    this.#uiController.playerGameboardPositions.forEach((p) => {
+    this.#uiController.placementGameboardPositions.forEach((p) => {
       p.addEventListener("pointerup", (e) => {
         const selectedShip = this.#uiController.selectedShip;
         if (selectedShip === undefined) return;

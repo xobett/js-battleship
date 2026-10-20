@@ -8,6 +8,7 @@ import "../css//scenes/menu.css";
 import "../css/scenes/gameplay.css";
 import "../css/scenes/fleet-placement.css";
 import { Axis } from "../enums/axis.js";
+import { hitSvg, missedHitSvg } from "../constants/svgIcons.js";
 
 export class UiController {
   #gameScenes = [];
@@ -44,8 +45,8 @@ export class UiController {
     return document.getElementById("fleet-return-optn");
   }
 
-  get playerGameboardPositions() {
-    return document.querySelectorAll(".position");
+  get placementGameboardPositions() {
+    return document.querySelectorAll("#player-placement-board .position");
   }
   get shipContainers() {
     return document.querySelectorAll(".fleet-container .ship");
@@ -56,6 +57,10 @@ export class UiController {
   }
   get restartGameboardBtn() {
     return document.getElementById("restart-gameboard-btn");
+  }
+
+  get cpuGameboardPositions() {
+    return document.querySelectorAll(".cpu-container .position");
   }
 
   init() {
@@ -293,7 +298,7 @@ export class UiController {
   }
 
   cleanDragVisuals() {
-    this.playerGameboardPositions.forEach((e) => {
+    this.placementGameboardPositions.forEach((e) => {
       e.classList.remove(this.#validDragClass);
       e.classList.remove(this.#invalidDragClass);
     });
@@ -328,5 +333,26 @@ export class UiController {
       .replace(/\s/g, "");
 
     return draggingShipDot;
+  }
+
+  onEnemyAttackedPos(hit, pos) {
+    if (hit) {
+      pos.innerHTML += hitSvg;
+    } else {
+      pos.innerHTML += missedHitSvg;
+    }
+  }
+
+  onPlayerAttackedPos(hit, coordinates) {
+    const [row, column] = coordinates;
+    const position = document.querySelector(
+      `.player-container .position[data-coordinates="[${row},${column}]"]`,
+    );
+
+    if (hit) {
+      position.innerHTML += hitSvg;
+    } else {
+      position.innerHTML += missedHitSvg;
+    }
   }
 }
