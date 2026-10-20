@@ -10,6 +10,15 @@ export class Gameboard {
     this.#buildBoard();
   }
 
+  unsunkShips() {
+    let count = 0;
+    this.#ships.forEach((s) => {
+      if (!s.isSunk()) count++;
+    });
+
+    return count;
+  }
+
   get positions() {
     return this.#positions;
   }

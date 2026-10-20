@@ -12,9 +12,19 @@
 .cpu-container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: start;
   align-items: center;
-  gap: 30px;
+  gap: 20px;
+
+  padding-top: 60px;
+}
+
+.player-container div:has(h3),
+.cpu-container div:has(h3) {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 #gameplay-scene .cpu-container .position::before {
@@ -29,14 +39,14 @@
   transition: all 0.1s ease;
 }
 
-#gameplay-scene .cpu-container .position:hover::before {
+#gameplay-scene #cpu-board[data-damageable="true"] .position:hover::before {
   background-color: rgba(255, 23, 23, 0);
   border: 3px solid #ffffffe3;
   border-radius: 7px;
   transform: scale(1);
 }
 
-#gameplay-scene .cpu-container .position:active::before {
+#gameplay-scene #cpu-board[data-damageable="true"] .position:active::before {
   background-color: rgb(255, 0, 0);
   border: 3px solid #fff0f0e3;
   border-radius: 7px;
@@ -44,7 +54,7 @@
   transform: scale(0.9);
 }
 
-#gameplay-scene .cpu-container .gameboard:hover {
+#gameplay-scene #cpu-board[data-damageable="true"] {
   cursor: crosshair;
 }
 
@@ -62,6 +72,8 @@
   width: var(--icon-size);
   height: var(--icon-size);
   animation: dropBomb 0.4s ease-in both;
+
+  pointer-events: none;
 }
 
 .gameboard svg[data-icon="hit"] {

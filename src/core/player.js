@@ -31,6 +31,10 @@ export class Player {
     return this.#controller.gameboard.entireFleetIsSunk();
   }
 
+  unsunkShips() {
+    return this.#controller.unsunkShips();
+  }
+
   alreadyPlacedShip(name) {
     return this.#controller.alreadyPlacedShip(name);
   }

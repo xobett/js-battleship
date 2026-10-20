@@ -30,6 +30,10 @@ export class PlayerController {
     this.#gameboard.clear();
   }
 
+  unsunkShips() {
+    return this.#gameboard.unsunkShips();
+  }
+
   canPlaceShip(ship, coordinates, axis) {
     return this.#gameboard.canPlaceShip(ship, coordinates, axis);
   }

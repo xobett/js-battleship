@@ -6,6 +6,7 @@ export class GameController {
   #player1 = undefined;
   #cpuPlayer = undefined;
   #currentAxis = Axis.vertical;
+  #canAttack = true;
 
   constructor(uiController) {
     this.#uiController = uiController;
@@ -101,11 +102,28 @@ export class GameController {
     this.#uiController.renderGameplayGameboard("cpu-board", cpuGameboardPos);
 
     this.#assignOnClickEnemyGameboardEventHandlers();
+    this.#uiController.setCPUBoardDamageable(true);
+    this.#updatePlayersShipCount();
+  }
+
+  #updatePlayersShipCount() {
+    const playerShipsCountTotal = this.#player1.fleet.length.toString();
+    const playerShipsCount = this.#player1.unsunkShips().toString();
+    const cpuShipsCountTotal = this.#cpuPlayer.fleet.length.toString();
+    const cpuShipsCount = this.#cpuPlayer.unsunkShips().toString();
+
+    const playerTxt = `Remaining ships ${playerShipsCount} / ${playerShipsCountTotal}`;
+    const cpuTxt = `Remaining ships ${cpuShipsCount} / ${cpuShipsCountTotal}`;
+
+    this.#uiController.updateText("player-board-text", playerTxt);
+    this.#uiController.updateText("cpu-board-text", cpuTxt);
   }
 
   #assignOnClickEnemyGameboardEventHandlers() {
     this.#uiController.cpuGameboardPositions.forEach((p) =>
       p.addEventListener("pointerup", async (e) => {
+        if (!this.#canAttack) return;
+
         const currCell = e.target;
         const currCellData = e.target.dataset;
 
@@ -113,18 +131,28 @@ export class GameController {
         const hit = this.#cpuPlayer.receiveAttack(coordinates);
         if (hit === null) return;
         this.#uiController.onEnemyAttackedPos(hit, currCell);
+        this.#updatePlayersShipCount();
 
+        this.#canAttack = false;
+        this.#uiController.setCPUBoardDamageable(false);
         await this.#receiveEnemyAttack();
+
+        this.#canAttack = true;
+        this.#uiController.setCPUBoardDamageable(true);
+        this.#updatePlayersShipCount();
       }),
     );
   }
 
   #receiveEnemyAttack() {
-    setTimeout(() => {
-      const randomCoordinates = this.#player1.getRandomAttackPos();
-      const receivedHit = this.#player1.receiveAttack(randomCoordinates);
-      this.#uiController.onPlayerAttackedPos(receivedHit, randomCoordinates);
-    }, 1000);
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const randomCoordinates = this.#player1.getRandomAttackPos();
+        const receivedHit = this.#player1.receiveAttack(randomCoordinates);
+        this.#uiController.onPlayerAttackedPos(receivedHit, randomCoordinates);
+        resolve();
+      }, 1000);
+    });
   }
 
   #renderPlacingGameboard() {

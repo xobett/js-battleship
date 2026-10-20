@@ -63,6 +63,10 @@ export class UiController {
     return document.querySelectorAll(".cpu-container .position");
   }
 
+  get cpuBoard() {
+    return document.getElementById("cpu-board");
+  }
+
   init() {
     this.#onInitConfigure();
   }
@@ -353,6 +357,19 @@ export class UiController {
       position.innerHTML += hitSvg;
     } else {
       position.innerHTML += missedHitSvg;
+    }
+  }
+
+  setCPUBoardDamageable(value) {
+    this.cpuBoard.dataset.damageable = value;
+  }
+
+  updateText(id, text) {
+    try {
+      const elem = document.getElementById(id);
+      elem.textContent = text;
+    } catch (error) {
+      console.log(error);
     }
   }
 }
