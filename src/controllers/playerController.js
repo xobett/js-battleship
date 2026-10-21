@@ -7,7 +7,7 @@ export class PlayerController {
 
   constructor() {
     this.#gameboard = new Gameboard();
-    this.#fleet = FleetLoadouts.starterFleet;
+    this.#fleet = FleetLoadouts.starterFleet();
   }
 
   get gameboard() {

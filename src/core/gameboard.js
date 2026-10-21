@@ -183,7 +183,7 @@ export class Gameboard {
     if (
       this.#attackedPositions.some((c) => this.#hasCoordinates(c, coordinates))
     )
-      return null;
+      return { hit: false };
 
     this.#attackedPositions.push(coordinates);
 
@@ -192,7 +192,10 @@ export class Gameboard {
     if (pos.ship === null) return false;
 
     pos.ship.hit();
-    return true;
+
+    const koHit = pos.ship.isSunk();
+
+    return { hit: true, koHit };
   }
 
   #hasCoordinates(c, coordinates) {

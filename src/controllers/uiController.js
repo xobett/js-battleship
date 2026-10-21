@@ -3,12 +3,14 @@ import "../css/header.css";
 import "../css/main.css";
 import "../css/dragging-ship-dot.css";
 import "../css/gameboard.css";
-import "../css//scenes/intro.css";
-import "../css//scenes/menu.css";
+import "../css/scenes/intro.css";
+import "../css/scenes/menu.css";
 import "../css/scenes/gameplay.css";
 import "../css/scenes/fleet-placement.css";
+import "../css/message-modal.css";
 import { Axis } from "../enums/axis.js";
 import { hitSvg, missedHitSvg } from "../constants/svgIcons.js";
+import { MessageModalController } from "./modalController.js";
 
 export class UiController {
   #gameScenes = [];
@@ -22,6 +24,8 @@ export class UiController {
   #followableIcons = [];
 
   constructor() {}
+
+  //#region Getters
 
   get selectedShip() {
     return this.#selectedShip;
@@ -66,6 +70,8 @@ export class UiController {
   get cpuBoard() {
     return document.getElementById("cpu-board");
   }
+
+  //#endregion Getters
 
   init() {
     this.#onInitConfigure();
@@ -115,6 +121,8 @@ export class UiController {
       console.error(`No element with the id of ${sceneId} exists`);
     }
   }
+
+  //#region Gameboards Render
 
   renderGameboard(selector, gameboardPositions) {
     try {
@@ -173,6 +181,14 @@ export class UiController {
     }
   }
 
+  setCPUBoardDamageable(value) {
+    this.cpuBoard.dataset.damageable = value;
+  }
+
+  //#endregion Gameboard Render
+
+  //#region Dragging Ships
+
   renderDraggableShips(playerFleet) {
     for (let i = 0; i < this.shipContainers.length; i++) {
       const currContainer = this.shipContainers[i];
@@ -230,6 +246,55 @@ export class UiController {
     this.#followableIcons = [];
   }
 
+  disableDraggableShip(name) {
+    try {
+      const container = [...this.shipContainers].find(
+        (c) => c.dataset.shipName === name,
+      );
+      container.style.backgroundColor = "red";
+      container.style.pointerEvents = "none";
+      container.firstChild.dataset.placed = true;
+    } catch (error) {
+      console.log(error);
+      console.log("No ship was found to mark as placed");
+    }
+  }
+
+  enableAllDraggableShips() {
+    this.shipContainers.forEach((c) => {
+      c.style.backgroundColor = "unset";
+      c.style.pointerEvents = "initial";
+      c.firstChild.dataset.placed = false;
+    });
+
+    const ships = document.querySelectorAll(
+      ".fleet-container div.dragging-ship-dot.static",
+    );
+
+    ships.forEach((s) => {
+      s.dataset.axis = Axis.vertical;
+    });
+  }
+
+  updateAxisDirection(axis) {
+    const ships = document.querySelectorAll(
+      ".fleet-container div.dragging-ship-dot.static",
+    );
+
+    let targetAxis;
+    if (axis === Axis.vertical) targetAxis = Axis.vertical;
+    else targetAxis = Axis.horizontal;
+
+    ships.forEach((s) => {
+      if (s.dataset.placed === "true") return;
+      s.dataset.axis = targetAxis;
+    });
+  }
+
+  //#endregion Dragging Ships
+
+  //#region Placing path render
+
   renderCanPlacePath(canPlace, placingPath) {
     this.cleanDragVisuals();
     this.#canDrag = canPlace;
@@ -271,58 +336,6 @@ export class UiController {
     }
   }
 
-  disableDraggableShip(name) {
-    try {
-      const container = [...this.shipContainers].find(
-        (c) => c.dataset.shipName === name,
-      );
-      container.style.backgroundColor = "red";
-      container.style.pointerEvents = "none";
-      container.firstChild.dataset.placed = true;
-    } catch (error) {
-      console.log(error);
-      console.log("No ship was found to mark as placed");
-    }
-  }
-
-  enableAllDraggableShips() {
-    this.shipContainers.forEach((c) => {
-      c.style.backgroundColor = "unset";
-      c.style.pointerEvents = "initial";
-      c.firstChild.dataset.placed = false;
-    });
-
-    const ships = document.querySelectorAll(
-      ".fleet-container div.dragging-ship-dot.static",
-    );
-
-    ships.forEach((s) => {
-      s.dataset.axis = Axis.vertical;
-    });
-  }
-
-  cleanDragVisuals() {
-    this.placementGameboardPositions.forEach((e) => {
-      e.classList.remove(this.#validDragClass);
-      e.classList.remove(this.#invalidDragClass);
-    });
-  }
-
-  updateAxisDirection(axis) {
-    const ships = document.querySelectorAll(
-      ".fleet-container div.dragging-ship-dot.static",
-    );
-
-    let targetAxis;
-    if (axis === Axis.vertical) targetAxis = Axis.vertical;
-    else targetAxis = Axis.horizontal;
-
-    ships.forEach((s) => {
-      if (s.dataset.placed === "true") return;
-      s.dataset.axis = targetAxis;
-    });
-  }
-
   #createStaticDraggingShipDot(shipName, delay = undefined) {
     const draggingShipDot = document.createElement("div");
     draggingShipDot.classList.add("dragging-ship-dot", "static");
@@ -338,6 +351,15 @@ export class UiController {
 
     return draggingShipDot;
   }
+
+  cleanDragVisuals() {
+    this.placementGameboardPositions.forEach((e) => {
+      e.classList.remove(this.#validDragClass);
+      e.classList.remove(this.#invalidDragClass);
+    });
+  }
+
+  //#endregion Placing path render
 
   onEnemyAttackedPos(hit, pos) {
     if (hit) {
@@ -358,10 +380,6 @@ export class UiController {
     } else {
       position.innerHTML += missedHitSvg;
     }
-  }
-
-  setCPUBoardDamageable(value) {
-    this.cpuBoard.dataset.damageable = value;
   }
 
   updateText(id, text) {

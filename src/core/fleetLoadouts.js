@@ -24,10 +24,13 @@ export const FleetLoadouts = (() => {
     },
   };
 
-  const starterFleet = [];
-  for (const s of Object.values(starter)) {
-    starterFleet.push(new Ship(s.name, s.size, s.spriteSrc, s.color));
-  }
+  const starterFleet = () => {
+    const fleet = [];
+    for (const s of Object.values(starter)) {
+      fleet.push(new Ship(s.name, s.size));
+    }
+    return fleet;
+  };
 
   return { starterFleet };
 })();

@@ -99,11 +99,22 @@ export class GameController {
       playerGameboardPos,
       true,
     );
-    this.#uiController.renderGameplayGameboard("cpu-board", cpuGameboardPos);
+    this.#uiController.renderGameplayGameboard(
+      "cpu-board",
+      cpuGameboardPos,
+      true,
+    );
 
     this.#assignOnClickEnemyGameboardEventHandlers();
     this.#uiController.setCPUBoardDamageable(true);
     this.#updatePlayersShipCount();
+    this.#updateGameplayMessage(
+      "Press on any of the enemy's gameboard positions to try and land a hit!",
+    );
+  }
+
+  #updateGameplayMessage(text) {
+    this.#uiController.updateText("gameplay-message-text", text);
   }
 
   #updatePlayersShipCount() {
@@ -112,8 +123,8 @@ export class GameController {
     const cpuShipsCountTotal = this.#cpuPlayer.fleet.length.toString();
     const cpuShipsCount = this.#cpuPlayer.unsunkShips().toString();
 
-    const playerTxt = `Remaining ships ${playerShipsCount} / ${playerShipsCountTotal}`;
-    const cpuTxt = `Remaining ships ${cpuShipsCount} / ${cpuShipsCountTotal}`;
+    const playerTxt = `Player Remaining ships ${playerShipsCount} / ${playerShipsCountTotal}`;
+    const cpuTxt = `CPU Remaining ships ${cpuShipsCount} / ${cpuShipsCountTotal}`;
 
     this.#uiController.updateText("player-board-text", playerTxt);
     this.#uiController.updateText("cpu-board-text", cpuTxt);
@@ -128,8 +139,20 @@ export class GameController {
         const currCellData = e.target.dataset;
 
         const coordinates = JSON.parse(currCellData.coordinates);
-        const hit = this.#cpuPlayer.receiveAttack(coordinates);
-        if (hit === null) return;
+
+        const { hit, koHit } = this.#cpuPlayer.receiveAttack(coordinates);
+        if (hit === false) return;
+
+        let txt;
+        if (hit) {
+          if (koHit) txt = "Enemy's ship is sunk!";
+          else txt = "Hit!";
+        } else txt = "Miss!";
+
+        this.#updateGameplayMessage(
+          `${txt} It's the enemy's turn, brace for impact!`,
+        );
+
         this.#uiController.onEnemyAttackedPos(hit, currCell);
         this.#updatePlayersShipCount();
 
@@ -148,10 +171,20 @@ export class GameController {
     return new Promise((resolve) => {
       setTimeout(() => {
         const randomCoordinates = this.#player1.getRandomAttackPos();
-        const receivedHit = this.#player1.receiveAttack(randomCoordinates);
+        const { hit: receivedHit, koHit } =
+          this.#player1.receiveAttack(randomCoordinates);
+
+        let txt;
+        if (receivedHit) {
+          if (koHit) txt = "The enemy sunk one of your ships!";
+          else txt = "Hit!";
+        } else txt = "Miss!";
+
+        this.#updateGameplayMessage(`${txt} , It's your turn, get him!`);
+
         this.#uiController.onPlayerAttackedPos(receivedHit, randomCoordinates);
         resolve();
-      }, 1000);
+      }, 2000);
     });
   }
 
