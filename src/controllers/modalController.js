@@ -12,16 +12,24 @@ export class MessageModalController {
     this.#footerBtn = document.getElementById("modal-footer-btn");
   }
 
-  alert(title, description, footer, onClick) {
+  alert(title, description, footer, onClick = undefined) {
     if (this.#onClick !== undefined)
       this.#footerBtn.removeEventListener("click", this.#onClick);
+
     this.#title.textContent = title;
     this.#description.textContent = description;
     this.#footerBtn.textContent = footer;
-    this.#onClick = onClick;
-    this.#footerBtn.addEventListener("click", this.#onClick);
+
+    if (onClick !== undefined) {
+      this.#onClick = onClick;
+      this.#footerBtn.addEventListener("click", this.#onClick);
+    }
 
     this.#modal.showModal();
+  }
+
+  setClosedBy(value) {
+    this.#modal.closedBy = value;
   }
 
   close() {

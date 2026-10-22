@@ -34,6 +34,14 @@ export class PlayerController {
     return this.#gameboard.unsunkShips();
   }
 
+  entireFleetIsSunk() {
+    return this.#gameboard.entireFleetIsSunk();
+  }
+
+  shipsCount() {
+    return this.#gameboard.shipsCount();
+  }
+
   canPlaceShip(ship, coordinates, axis) {
     return this.#gameboard.canPlaceShip(ship, coordinates, axis);
   }

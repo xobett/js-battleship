@@ -155,6 +155,7 @@
   }
 }
 
+#menu-scene .avatar-icon.active,
 #menu-scene .avatar-icon:has(img):hover {
   cursor: pointer;
   background-color: rgb(42, 152, 255);

@@ -1,20 +1,27 @@
 import { Player } from "../core/player.js";
 import { Axis } from "../enums/axis.js";
+import { MessageModalController } from "./modalController.js";
 
 export class GameController {
   #uiController;
+  #messageModalController;
+
+  #playerAvatarSrc = undefined;
+
   #player1 = undefined;
   #cpuPlayer = undefined;
+
   #currentAxis = Axis.vertical;
   #canAttack = true;
 
+  #gameOver = false;
+
   constructor(uiController) {
     this.#uiController = uiController;
+    this.#messageModalController = new MessageModalController();
   }
 
   init() {
-    this.#player1 = new Player("Cesar");
-    this.#cpuPlayer = new Player("CPU");
     this.#uiController.init();
     this.#configureNavigation();
     this.#configureFleetPlacementBtns();
@@ -23,6 +30,7 @@ export class GameController {
   #configureNavigation() {
     this.#uiController.introScene.addEventListener("click", () => {
       this.#loadScene("menu-scene");
+      this.#onEnterMenuScene();
     });
 
     this.#uiController.menuReturnOptn.addEventListener("click", () => {
@@ -30,6 +38,29 @@ export class GameController {
     });
 
     this.#uiController.menuContinueOptn.addEventListener("click", () => {
+      if (this.#playerAvatarSrc === undefined) {
+        this.#messageModalController.alert(
+          "Wait, you don't like my avatar picks?",
+          "Bad news are, you still have to pick one! Not sure which one to pick? Try Santa!",
+          "I'm being silly, your avatar picks are great",
+          () => this.#messageModalController.close(),
+        );
+        return;
+      }
+
+      const name = this.#uiController.nameInput.value;
+
+      if (name === "") {
+        this.#messageModalController.alert(
+          "You must have a name!",
+          'You can not be possibly named " ", right...? ',
+          "Fine I'll right my name",
+          () => this.#messageModalController.close(),
+        );
+        return;
+      }
+      this.#player1 = new Player(name, this.#playerAvatarSrc);
+
       this.#loadScene("fleet-placement-scene");
       this.#onEnterFleetPlacementScene();
     });
@@ -40,33 +71,31 @@ export class GameController {
     });
 
     this.#uiController.fleetContinueOptn.addEventListener("click", () => {
+      if (this.#player1.shipsCount() < this.#player1.fleet.length) {
+        this.#messageModalController.alert(
+          "Trust me, you are not that guy",
+          "Make sure to place ALL of your ships before continuing!",
+          "Got it!",
+          () => this.#messageModalController.close(),
+        );
+        return;
+      }
+
       this.#loadScene("gameplay-scene");
       this.#onEnterGameplayScene();
     });
   }
 
-  #configureFleetPlacementBtns() {
-    this.#uiController.rotateShipBtn.addEventListener("click", () => {
-      this.#toggleCurrentRotation();
-      this.#uiController.updateAxisDirection(this.#currentAxis);
+  #onEnterMenuScene() {
+    this.#uiController.avatars.forEach((a) => {
+      a.addEventListener("click", (e) => {
+        this.#uiController.clearActiveAvatar();
+
+        a.classList.add("active");
+        const avatarImg = e.target.querySelector("img");
+        this.#playerAvatarSrc = avatarImg.src;
+      });
     });
-
-    this.#uiController.restartGameboardBtn.addEventListener("click", () => {
-      this.#player1.clearGameboard();
-
-      this.#uiController.clearBoardById("player-placement-board");
-      this.#renderPlacingGameboard();
-      this.#assignOnShipDropEventHandlers();
-      this.#uiController.enableAllDraggableShips();
-
-      this.#currentAxis = Axis.vertical;
-    });
-  }
-
-  #toggleCurrentRotation() {
-    if (this.#currentAxis === Axis.vertical)
-      this.#currentAxis = Axis.horizontal;
-    else this.#currentAxis = Axis.vertical;
   }
 
   #loadScene(scene) {
@@ -74,10 +103,16 @@ export class GameController {
   }
 
   #onEnterFleetPlacementScene() {
+    this.#updatePlayerInfo();
     this.#renderPlacingGameboard();
     this.#assignOnShipDropEventHandlers();
     this.#uiController.renderDraggableShips(this.#player1.fleet);
     this.#uiController.enableAllDraggableShips();
+  }
+
+  #updatePlayerInfo() {
+    this.#uiController.updateText("player-name", this.#player1.name);
+    this.#uiController.updatePlayerAvatar(this.#player1.avatarSrc);
   }
 
   #onReturnFromFleetPlacementScene() {
@@ -89,6 +124,7 @@ export class GameController {
   }
 
   #onEnterGameplayScene() {
+    this.#cpuPlayer = new Player("CPU");
     this.#cpuPlayer.randomPlaceFleet();
 
     const playerGameboardPos = this.#player1.gameboardPositions;
@@ -105,6 +141,7 @@ export class GameController {
       true,
     );
 
+    this.#messageModalController.setClosedBy("none");
     this.#assignOnClickEnemyGameboardEventHandlers();
     this.#uiController.setCPUBoardDamageable(true);
     this.#updatePlayersShipCount();
@@ -133,6 +170,8 @@ export class GameController {
   #assignOnClickEnemyGameboardEventHandlers() {
     this.#uiController.cpuGameboardPositions.forEach((p) =>
       p.addEventListener("pointerup", async (e) => {
+        e.preventDefault();
+        if (this.#gameOver) return;
         if (!this.#canAttack) return;
 
         const currCell = e.target;
@@ -141,7 +180,25 @@ export class GameController {
         const coordinates = JSON.parse(currCellData.coordinates);
 
         const { hit, koHit } = this.#cpuPlayer.receiveAttack(coordinates);
-        if (hit === false) return;
+        if (hit === undefined) return;
+
+        this.#uiController.onEnemyAttackedPos(hit, currCell);
+
+        if (this.#cpuPlayer.entireFleetIsSunk()) {
+          this.#updateGameplayMessage(
+            "You did it champ, you sunk all of your enemy's fleet!",
+          );
+          setTimeout(() => {
+            this.#messageModalController.alert(
+              "You won!",
+              "What a way to go! If you had fun, please give this repository a star! :)",
+              "Play again",
+              () => window.location.reload(),
+            );
+          }, 1500);
+          this.#gameOver = true;
+          return;
+        }
 
         let txt;
         if (hit) {
@@ -152,8 +209,6 @@ export class GameController {
         this.#updateGameplayMessage(
           `${txt} It's the enemy's turn, brace for impact!`,
         );
-
-        this.#uiController.onEnemyAttackedPos(hit, currCell);
         this.#updatePlayersShipCount();
 
         this.#canAttack = false;
@@ -173,6 +228,25 @@ export class GameController {
         const randomCoordinates = this.#player1.getRandomAttackPos();
         const { hit: receivedHit, koHit } =
           this.#player1.receiveAttack(randomCoordinates);
+        this.#uiController.onPlayerAttackedPos(receivedHit, randomCoordinates);
+
+        if (this.#player1.entireFleetIsSunk()) {
+          this.#updateGameplayMessage(
+            "Game over, your enemy sunk all of your fleet!",
+          );
+          setTimeout(() => {
+            this.#messageModalController.alert(
+              "You lost!",
+              "Maybe next time we will get them! If you had fun, please give this repository a star! :)",
+              "Play again",
+              () => {
+                window.location.reload();
+              },
+            );
+          }, 1500);
+          this.#gameOver = true;
+          return;
+        }
 
         let txt;
         if (receivedHit) {
@@ -180,11 +254,9 @@ export class GameController {
           else txt = "Hit!";
         } else txt = "Miss!";
 
-        this.#updateGameplayMessage(`${txt} , It's your turn, get him!`);
-
-        this.#uiController.onPlayerAttackedPos(receivedHit, randomCoordinates);
+        this.#updateGameplayMessage(`${txt} It's your turn, get them!`);
         resolve();
-      }, 2000);
+      }, 0);
     });
   }
 
@@ -250,5 +322,29 @@ export class GameController {
         this.#uiController.cleanDragVisuals();
       });
     });
+  }
+
+  #configureFleetPlacementBtns() {
+    this.#uiController.rotateShipBtn.addEventListener("click", () => {
+      this.#toggleCurrentRotation();
+      this.#uiController.updateAxisDirection(this.#currentAxis);
+    });
+
+    this.#uiController.restartGameboardBtn.addEventListener("click", () => {
+      this.#player1.clearGameboard();
+
+      this.#uiController.clearBoardById("player-placement-board");
+      this.#renderPlacingGameboard();
+      this.#assignOnShipDropEventHandlers();
+      this.#uiController.enableAllDraggableShips();
+
+      this.#currentAxis = Axis.vertical;
+    });
+  }
+
+  #toggleCurrentRotation() {
+    if (this.#currentAxis === Axis.vertical)
+      this.#currentAxis = Axis.horizontal;
+    else this.#currentAxis = Axis.vertical;
   }
 }

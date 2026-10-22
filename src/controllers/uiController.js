@@ -10,7 +10,6 @@ import "../css/scenes/fleet-placement.css";
 import "../css/message-modal.css";
 import { Axis } from "../enums/axis.js";
 import { hitSvg, missedHitSvg } from "../constants/svgIcons.js";
-import { MessageModalController } from "./modalController.js";
 
 export class UiController {
   #gameScenes = [];
@@ -69,6 +68,18 @@ export class UiController {
 
   get cpuBoard() {
     return document.getElementById("cpu-board");
+  }
+
+  get avatars() {
+    return document.querySelectorAll("div.avatar-icon");
+  }
+
+  get nameInput() {
+    return document.getElementById("input-name");
+  }
+
+  get playerAvatarIcon() {
+    return document.getElementById("player-avatar-icon");
   }
 
   //#endregion Getters
@@ -251,7 +262,7 @@ export class UiController {
       const container = [...this.shipContainers].find(
         (c) => c.dataset.shipName === name,
       );
-      container.style.backgroundColor = "red";
+      container.classList.add("blocked");
       container.style.pointerEvents = "none";
       container.firstChild.dataset.placed = true;
     } catch (error) {
@@ -262,7 +273,7 @@ export class UiController {
 
   enableAllDraggableShips() {
     this.shipContainers.forEach((c) => {
-      c.style.backgroundColor = "unset";
+      c.classList.remove("blocked");
       c.style.pointerEvents = "initial";
       c.firstChild.dataset.placed = false;
     });
@@ -389,5 +400,14 @@ export class UiController {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  clearActiveAvatar() {
+    this.avatars.forEach((av) => av.classList.remove("active"));
+  }
+
+  updatePlayerAvatar(src) {
+    console.log(this.playerAvatarIcon);
+    this.playerAvatarIcon.src = src;
   }
 }

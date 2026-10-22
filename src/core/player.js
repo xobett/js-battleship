@@ -2,13 +2,16 @@ import { PlayerController } from "../controllers/playerController.js";
 
 export class Player {
   name = undefined;
-  avatar = undefined;
+  avatarSrc = undefined;
   #controller = null;
 
-  constructor(name) {
+  constructor(name, avatarSrc = undefined) {
     if (name === undefined) throw new Error("Name is required");
     this.name = name;
     this.#controller = new PlayerController();
+    if (avatarSrc !== undefined) {
+      this.avatarSrc = avatarSrc;
+    }
   }
 
   get fleet() {
@@ -27,12 +30,16 @@ export class Player {
     return this.#controller.receiveAttack(coordinates);
   }
 
-  fleetIsSunk() {
-    return this.#controller.gameboard.entireFleetIsSunk();
+  entireFleetIsSunk() {
+    return this.#controller.entireFleetIsSunk();
   }
 
   unsunkShips() {
     return this.#controller.unsunkShips();
+  }
+
+  shipsCount() {
+    return this.#controller.shipsCount();
   }
 
   alreadyPlacedShip(name) {

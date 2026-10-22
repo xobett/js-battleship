@@ -55,7 +55,7 @@
         </svg>
       </ul>
     </nav>
-    <div id="intro-scene" class="game-scene">
+    <div id="intro-scene" class="game-scene active">
       <p>Welcome to Battleship!</p>
       <p>CLICK ANYWHERE TO START!</p>
     </div>
@@ -133,13 +133,13 @@
           </div>
         </div>
         <div class="input-container">
-          <input type="text" placeholder="Player 1" />
+          <input id="input-name" type="text" placeholder="Player 1" />
           <p>Enter your name!</p>
         </div>
       </div>
     </div>
 
-    <div id="fleet-placement-scene" class="game-scene active">
+    <div id="fleet-placement-scene" class="game-scene">
       <div class="options-advice-container">
         <div class="advice-container">
           <p class="title">Time to deploy your fleet</p>
@@ -205,20 +205,19 @@
         </div>
 
         <div class="player-info-container">
-          <div class="avatar-icon" data-avatar-icon="heinsenberg">
-            <img
-              src="./assets/icons/avatar-bad-breaking-svgrepo-com.svg"
-              alt="Heinsenberg avatar icon"
-            />
+          <div class="avatar-icon">
+            <img id="player-avatar-icon" />
           </div>
-          <p>CESAR</p>
+          <p id="player-name">CESAR</p>
         </div>
 
         <ul class="options-container">
           <li>
             <span id="fleet-return-optn" class="hoverable">Return to menu</span>
           </li>
-          <li><span id="fleet-continue-optn" class="hoverable">Start</span></li>
+          <li>
+            <span id="fleet-continue-optn" class="hoverable"><u>Start</u></span>
+          </li>
         </ul>
       </div>
       <div class="placement-container">
@@ -272,36 +271,39 @@
 
     <div id="gameplay-scene" class="game-scene">
       <div id="gameplay-message-container">
-        <p id="gameplay-message-text">
-          It's your turn, click on any of the CPU's gameboard positions to try
-          and land a hit!
-        </p>
-        <ul>
-          <li>Exit game and return to fleet placement</li>
-        </ul>
+        <p id="gameplay-message-text"></p>
       </div>
       <div class="player-container">
+        <div id="player-board" class="gameboard"></div>
         <div>
-          <h3>CESAR</h3>
+          <div class="avatar-icon">
+            <img
+              id="gameplay-player-avatar"
+              alt="Image of the player's avatar"
+            />
+          </div>
+          <h3 id="gameplay-player-name"></h3>
           <p id="player-board-text">Remaining ships # / 5</p>
         </div>
-        <div id="player-board" class="gameboard"></div>
       </div>
       <div class="cpu-container">
+        <div id="cpu-board" class="gameboard"></div>
         <div>
+          <div class="avatar-icon">
+            <img id="gameplay-cpu-avatar" alt="Image of the CPU's avatar" />
+          </div>
           <h3>CPU</h3>
           <p id="cpu-board-text">Remaining ships # / 5</p>
         </div>
-        <div id="cpu-board" class="gameboard"></div>
       </div>
     </div>
 
-    <dialog id="message-modal">
-      <h3 id="modal-title">You won!</h3>
-      <p id="modal-description">You got your enemy, great job!</p>
+    <dialog id="message-modal" closedby="any">
+      <h3 id="modal-title"></h3>
+      <p id="modal-description"></p>
       <ul>
         <li>
-          <span id="modal-footer-btn" class="hoverable">Return to menu</span>
+          <span id="modal-footer-btn" class="hoverable"></span>
         </li>
       </ul>
     </dialog>

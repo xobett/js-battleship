@@ -10,6 +10,10 @@ export class Gameboard {
     this.#buildBoard();
   }
 
+  shipsCount() {
+    return this.#ships.length;
+  }
+
   unsunkShips() {
     let count = 0;
     this.#ships.forEach((s) => {
@@ -183,13 +187,13 @@ export class Gameboard {
     if (
       this.#attackedPositions.some((c) => this.#hasCoordinates(c, coordinates))
     )
-      return { hit: false };
+      return { hit: undefined };
 
     this.#attackedPositions.push(coordinates);
 
     const [row, column] = coordinates;
     const pos = this.#positions[row][column];
-    if (pos.ship === null) return false;
+    if (pos.ship === null) return { hit: false };
 
     pos.ship.hit();
 

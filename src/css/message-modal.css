@@ -10,7 +10,8 @@ dialog {
   opacity: 0;
   transform: scale(0);
 
-  width: 300px;
+  padding-inline: 60px;
+  width: min(80%, 390px);
 
   transition:
     opacity 0.5s ease,
@@ -20,8 +21,8 @@ dialog {
 
   background-color: #f2f9ff;
   box-shadow:
-    0px 0px 10px rgba(138, 140, 212, 0.541),
-    inset 0px 0px 10px rgba(165, 166, 209, 0.541);
+    0px 0px 10px rgba(71, 73, 110, 0.541),
+    inset 0px 0px 10px rgba(100, 101, 121, 0.541);
 }
 
 @starting-style {
@@ -39,7 +40,7 @@ dialog::backdrop {
 }
 
 dialog:open::backdrop {
-  background-color: rgba(0, 0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.342);
 }
 
 @starting-style {
@@ -57,6 +58,7 @@ dialog[id="message-modal"] {
 
 dialog span.hoverable {
   position: relative;
+  text-decoration: underline;
 }
 
 dialog span.hoverable:hover {
