@@ -78,10 +78,6 @@ export class UiController {
     return document.getElementById("input-name");
   }
 
-  get playerAvatarIcon() {
-    return document.getElementById("player-avatar-icon");
-  }
-
   //#endregion Getters
 
   init() {
@@ -406,8 +402,8 @@ export class UiController {
     this.avatars.forEach((av) => av.classList.remove("active"));
   }
 
-  updatePlayerAvatar(src) {
-    console.log(this.playerAvatarIcon);
-    this.playerAvatarIcon.src = src;
+  updatePlayerAvatar(id, src) {
+    const avatarIcon = document.getElementById(id);
+    avatarIcon.src = src;
   }
 }

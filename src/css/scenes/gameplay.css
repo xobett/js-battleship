@@ -11,12 +11,15 @@
 .player-container,
 .cpu-container {
   display: flex;
-  flex-direction: column;
   justify-content: start;
   align-items: center;
-  gap: 20px;
+  gap: 30px;
 
-  padding-top: 80px;
+  padding-inline: 20px;
+}
+
+.player-container {
+  flex-direction: row-reverse;
 }
 
 .player-container div:has(h3),

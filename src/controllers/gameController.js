@@ -1,3 +1,4 @@
+import { getRandomAvatarIconSrc } from "../constants/avatarIconSrcs.js";
 import { Player } from "../core/player.js";
 import { Axis } from "../enums/axis.js";
 import { MessageModalController } from "./modalController.js";
@@ -103,16 +104,21 @@ export class GameController {
   }
 
   #onEnterFleetPlacementScene() {
-    this.#updatePlayerInfo();
+    this.#updatePlayerInfo(
+      "fleet-placement-player-name",
+      this.#player1.name,
+      "fleet-placement-player-avatar",
+      this.#player1.avatarSrc,
+    );
     this.#renderPlacingGameboard();
     this.#assignOnShipDropEventHandlers();
     this.#uiController.renderDraggableShips(this.#player1.fleet);
     this.#uiController.enableAllDraggableShips();
   }
 
-  #updatePlayerInfo() {
-    this.#uiController.updateText("player-name", this.#player1.name);
-    this.#uiController.updatePlayerAvatar(this.#player1.avatarSrc);
+  #updatePlayerInfo(textId, text, avatarId, avatarSrc) {
+    this.#uiController.updateText(textId, text);
+    this.#uiController.updatePlayerAvatar(avatarId, avatarSrc);
   }
 
   #onReturnFromFleetPlacementScene() {
@@ -144,6 +150,19 @@ export class GameController {
     this.#messageModalController.setClosedBy("none");
     this.#assignOnClickEnemyGameboardEventHandlers();
     this.#uiController.setCPUBoardDamageable(true);
+
+    this.#updatePlayerInfo(
+      "gameplay-player-name",
+      this.#player1.name,
+      "gameplay-player-avatar",
+      this.#player1.avatarSrc,
+    );
+    const randomAvatarSrc = getRandomAvatarIconSrc();
+    this.#uiController.updatePlayerAvatar(
+      "gameplay-cpu-avatar",
+      randomAvatarSrc,
+    );
+
     this.#updatePlayersShipCount();
     this.#updateGameplayMessage(
       "Press on any of the enemy's gameboard positions to try and land a hit!",
@@ -160,8 +179,8 @@ export class GameController {
     const cpuShipsCountTotal = this.#cpuPlayer.fleet.length.toString();
     const cpuShipsCount = this.#cpuPlayer.unsunkShips().toString();
 
-    const playerTxt = `Player Remaining ships ${playerShipsCount} / ${playerShipsCountTotal}`;
-    const cpuTxt = `CPU Remaining ships ${cpuShipsCount} / ${cpuShipsCountTotal}`;
+    const playerTxt = `Remaining ships ${playerShipsCount} / ${playerShipsCountTotal}`;
+    const cpuTxt = `Remaining ships ${cpuShipsCount} / ${cpuShipsCountTotal}`;
 
     this.#uiController.updateText("player-board-text", playerTxt);
     this.#uiController.updateText("cpu-board-text", cpuTxt);
@@ -256,7 +275,7 @@ export class GameController {
 
         this.#updateGameplayMessage(`${txt} It's your turn, get them!`);
         resolve();
-      }, 0);
+      }, 2000);
     });
   }
 
