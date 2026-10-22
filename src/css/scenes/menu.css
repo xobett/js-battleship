@@ -215,3 +215,14 @@
 .avatar-icon img {
   pointer-events: none;
 }
+
+@media (max-width: 760px) {
+  #menu-scene.active {
+    grid-auto-flow: row;
+    grid-template-columns: 1fr;
+  }
+
+  #menu-scene .options-advice-container {
+    gap: 0px;
+  }
+}

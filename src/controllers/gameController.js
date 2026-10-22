@@ -141,11 +141,7 @@ export class GameController {
       playerGameboardPos,
       true,
     );
-    this.#uiController.renderGameplayGameboard(
-      "cpu-board",
-      cpuGameboardPos,
-      true,
-    );
+    this.#uiController.renderGameplayGameboard("cpu-board", cpuGameboardPos);
 
     this.#messageModalController.setClosedBy("none");
     this.#assignOnClickEnemyGameboardEventHandlers();
