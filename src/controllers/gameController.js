@@ -37,33 +37,15 @@ export class GameController {
     this.#uiController.menuReturnOptn.addEventListener("click", () => {
       this.#loadScene("intro-scene");
     });
+    this.#uiController.mobileMenuReturnOptn.addEventListener("click", () => {
+      this.#loadScene("intro-scene");
+    });
 
     this.#uiController.menuContinueOptn.addEventListener("click", () => {
-      if (this.#playerAvatarSrc === undefined) {
-        this.#messageModalController.alert(
-          "Wait, you don't like my avatar picks?",
-          "Bad news are, you still have to pick one! Not sure which one to pick? Try Santa!",
-          "I'm being silly, your avatar picks are great",
-          () => this.#messageModalController.close(),
-        );
-        return;
-      }
-
-      const name = this.#uiController.nameInput.value;
-
-      if (name === "") {
-        this.#messageModalController.alert(
-          "You must have a name!",
-          'You can not be possibly named " ", right...? ',
-          "Fine I'll right my name",
-          () => this.#messageModalController.close(),
-        );
-        return;
-      }
-      this.#player1 = new Player(name, this.#playerAvatarSrc);
-
-      this.#loadScene("fleet-placement-scene");
-      this.#onEnterFleetPlacementScene();
+      this.#validateBeforeEnterFleetScene();
+    });
+    this.#uiController.mobileMenuContinueOptn.addEventListener("click", () => {
+      this.#validateBeforeEnterFleetScene();
     });
 
     this.#uiController.fleetReturnOptn.addEventListener("click", () => {
@@ -85,6 +67,34 @@ export class GameController {
       this.#loadScene("gameplay-scene");
       this.#onEnterGameplayScene();
     });
+  }
+
+  #validateBeforeEnterFleetScene() {
+    if (this.#playerAvatarSrc === undefined) {
+      this.#messageModalController.alert(
+        "Wait, you don't like my avatar picks?",
+        "Bad news are, you still have to pick one! Not sure which one to pick? Try Santa!",
+        "I'm being silly, your avatar picks are great",
+        () => this.#messageModalController.close(),
+      );
+      return;
+    }
+
+    const name = this.#uiController.nameInput.value;
+
+    if (name === "") {
+      this.#messageModalController.alert(
+        "You must have a name!",
+        'You can not be possibly named " ", right...? ',
+        "Fine I'll right my name",
+        () => this.#messageModalController.close(),
+      );
+      return;
+    }
+    this.#player1 = new Player(name, this.#playerAvatarSrc);
+
+    this.#loadScene("fleet-placement-scene");
+    this.#onEnterFleetPlacementScene();
   }
 
   #onEnterMenuScene() {

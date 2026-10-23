@@ -19,3 +19,9 @@
   width: var(--icon-size);
   height: var(--icon-size);
 }
+
+@media (max-width: 760px) {
+  .github-icon {
+    margin-right: 20px;
+  }
+}

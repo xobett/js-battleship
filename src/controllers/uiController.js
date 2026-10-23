@@ -41,6 +41,13 @@ export class UiController {
     return document.getElementById("menu-return-optn");
   }
 
+  get mobileMenuContinueOptn() {
+    return document.getElementById("mobile-menu-continue-optn");
+  }
+  get mobileMenuReturnOptn() {
+    return document.getElementById("mobile-menu-return-optn");
+  }
+
   get fleetContinueOptn() {
     return document.getElementById("fleet-continue-optn");
   }
