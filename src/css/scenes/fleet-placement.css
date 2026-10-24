@@ -203,6 +203,8 @@ svg[data-action="restart"] {
     grid-template-columns: 1fr;
     grid-template-rows: min-content 1fr;
     padding-inline: 10px;
+
+    overflow: hidden;
   }
 
   body:has(#fleet-placement-scene.active) {
@@ -237,9 +239,6 @@ svg[data-action="restart"] {
   #fleet-placement-scene.active .options-container.mobile,
   #fleet-placement-scene.active .player-info-container.mobile {
     display: flex;
-  }
-
-  #fleet-placement-scene .advice-container .hint-container {
   }
 
   #fleet-placement-scene .hint-container .web {

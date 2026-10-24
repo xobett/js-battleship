@@ -86,7 +86,7 @@ export class GameController {
     if (this.#playerAvatarSrc === undefined) {
       this.#messageModalController.alert(
         "Wait, you don't like my avatar picks?",
-        "Bad news are, you still have to pick one! Not sure which one to pick? Try Santa!",
+        "Bad news is, you still have to pick one! Not sure which one to pick? Try Santa!",
         "I'm being silly, your avatar picks are great",
         () => this.#messageModalController.close(),
       );
@@ -209,6 +209,8 @@ export class GameController {
     this.#uiController.cpuGameboardPositions.forEach((p) =>
       p.addEventListener("pointerup", async (e) => {
         e.preventDefault();
+        this.#uiController.removeFocus();
+
         if (this.#gameOver) return;
         if (!this.#canAttack) return;
 

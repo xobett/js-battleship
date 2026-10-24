@@ -74,6 +74,20 @@
   z-index: 100;
 
   font-size: 1.3rem;
+  text-align: center;
+}
+
+#gameplay-message-text {
+  will-change: contents;
+  animation: float 3s both linear infinite;
+}
+
+@keyframes float {
+  0% {
+  }
+  50% {
+    transform: scale(1.04);
+  }
 }
 
 .gameboard svg {
@@ -119,5 +133,57 @@
   }
   100% {
     transform: scale(1) translate(0);
+  }
+}
+
+@media (max-width: 760px) {
+  #gameplay-scene.active {
+    padding: unset;
+    grid-template-columns: 1fr;
+    grid-auto-flow: row;
+    grid-template-rows: 20px 1fr 1fr;
+    padding-inline: 10px;
+  }
+
+  body:has(#gameplay-scene.active) {
+    padding-bottom: unset;
+  }
+
+  #gameplay-message-container {
+    grid-column: unset;
+  }
+
+  #gameplay-scene.active .avatar-icon {
+    width: 100px;
+    height: 100px;
+  }
+
+  #gameplay-scene .gameboard {
+    width: 100%;
+    height: 70%;
+  }
+
+  .gameboard svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  #gameplay-message-text {
+    font-size: 1.1rem;
+  }
+
+  .player-container,
+  .cpu-container {
+    gap: 10px;
+    padding-inline: 0;
+    font-size: 0.9rem;
+  }
+
+  .cpu-container {
+    flex-direction: row-reverse;
+  }
+
+  .player-container {
+    flex-direction: row;
   }
 }

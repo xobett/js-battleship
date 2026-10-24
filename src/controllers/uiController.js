@@ -143,6 +143,10 @@ export class UiController {
     }
   }
 
+  removeFocus() {
+    document.activeElement.blur();
+  }
+
   //#region Gameboards Render
 
   renderGameboard(selector, gameboardPositions) {
