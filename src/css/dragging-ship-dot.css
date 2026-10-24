@@ -163,3 +163,23 @@ div.dragging-ship-dot[data-ship="patrolboat"] {
     transform: scale(1);
   }
 }
+
+@media (max-width: 760px) {
+  .gameboard .dragging-ship-dot.static {
+    width: 26px;
+    height: 26px;
+  }
+
+  div.dragging-ship-dot {
+    width: 30px;
+    height: 30px;
+  }
+
+  .fleet-container div.dragging-ship-dot.static::before {
+    right: -7px;
+    top: px;
+
+    width: 12px;
+    height: 12px;
+  }
+}

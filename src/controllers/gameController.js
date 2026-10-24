@@ -53,20 +53,33 @@ export class GameController {
       this.#onReturnFromFleetPlacementScene();
     });
 
-    this.#uiController.fleetContinueOptn.addEventListener("click", () => {
-      if (this.#player1.shipsCount() < this.#player1.fleet.length) {
-        this.#messageModalController.alert(
-          "Trust me, you are not that guy",
-          "Make sure to place ALL of your ships before continuing!",
-          "Got it!",
-          () => this.#messageModalController.close(),
-        );
-        return;
-      }
-
-      this.#loadScene("gameplay-scene");
-      this.#onEnterGameplayScene();
+    this.#uiController.mobileFleetReturnOptn.addEventListener("click", () => {
+      this.#loadScene("menu-scene");
+      this.#onReturnFromFleetPlacementScene();
     });
+
+    this.#uiController.fleetContinueOptn.addEventListener("click", () => {
+      this.#validateBeforeEnterGameplayScene();
+    });
+
+    this.#uiController.mobileFleetContinueOptn.addEventListener("click", () => {
+      this.#validateBeforeEnterGameplayScene();
+    });
+  }
+
+  #validateBeforeEnterGameplayScene() {
+    if (this.#player1.shipsCount() < this.#player1.fleet.length) {
+      this.#messageModalController.alert(
+        "Trust me, you are not that guy",
+        "Make sure to place ALL of your ships before continuing!",
+        "Got it!",
+        () => this.#messageModalController.close(),
+      );
+      return;
+    }
+
+    this.#loadScene("gameplay-scene");
+    this.#onEnterGameplayScene();
   }
 
   #validateBeforeEnterFleetScene() {
@@ -322,6 +335,7 @@ export class GameController {
       });
 
       p.addEventListener("pointerenter", (e) => {
+        console.log("hello");
         const selectedShip = this.#uiController.selectedShip;
         if (selectedShip === undefined) return;
 

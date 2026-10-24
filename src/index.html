@@ -161,10 +161,10 @@
     <div id="fleet-placement-scene" class="game-scene">
       <div class="options-advice-container">
         <div class="advice-container">
-          <p class="title">Time to deploy your fleet</p>
+          <p class="title">Deploy your fleet</p>
           <div class="hint-container">
             <p>Place your fleet where you think your enemy won't attack!</p>
-            <div>
+            <div class="web">
               <p>
                 Make sure to use the buttons down below the fleet's container if
                 you want to:
@@ -223,14 +223,14 @@
           </div>
         </div>
 
-        <div class="player-info-container">
+        <div class="player-info-container web">
           <div class="avatar-icon">
             <img id="fleet-placement-player-avatar" />
           </div>
           <p id="fleet-placement-player-name">CESAR</p>
         </div>
 
-        <ul class="options-container">
+        <ul class="options-container web">
           <li>
             <span id="fleet-return-optn" class="hoverable">Return to menu</span>
           </li>
@@ -252,6 +252,7 @@
           <ul class="input-btns-container">
             <li id="rotate-ship-btn">
               <svg
+                data-action="rotate"
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
                 height="24"
@@ -269,6 +270,7 @@
             </li>
             <li id="restart-gameboard-btn">
               <svg
+                data-action="restart"
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
                 height="24"
@@ -285,6 +287,19 @@
             </li>
           </ul>
         </div>
+
+        <ul class="options-container mobile">
+          <li>
+            <span id="mobile-fleet-return-optn" class="hoverable"
+              >Return to menu</span
+            >
+          </li>
+          <li>
+            <span id="mobile-fleet-continue-optn" class="hoverable"
+              ><u>Start</u></span
+            >
+          </li>
+        </ul>
       </div>
     </div>
 

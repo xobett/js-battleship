@@ -24,4 +24,13 @@
   .github-icon {
     margin-right: 20px;
   }
+
+  .header-container {
+    margin-bottom: 20px;
+    height: 58px;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
 }

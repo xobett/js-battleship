@@ -25,4 +25,13 @@
 
   position: relative;
   transition: all 0.1s ease-out;
+
+  touch-action: none;
+}
+
+@media (max-width: 760px) {
+  .gameboard {
+    width: 300px;
+    height: 300px;
+  }
 }

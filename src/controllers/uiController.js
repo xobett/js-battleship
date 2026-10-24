@@ -55,6 +55,13 @@ export class UiController {
     return document.getElementById("fleet-return-optn");
   }
 
+  get mobileFleetContinueOptn() {
+    return document.getElementById("mobile-fleet-continue-optn");
+  }
+  get mobileFleetReturnOptn() {
+    return document.getElementById("mobile-fleet-return-optn");
+  }
+
   get placementGameboardPositions() {
     return document.querySelectorAll("#player-placement-board .position");
   }
@@ -98,7 +105,7 @@ export class UiController {
   }
 
   #configureCursorFollow() {
-    document.addEventListener("mousemove", (e) => {
+    document.addEventListener("pointermove", (e) => {
       const y = e.clientY;
       const x = e.clientX;
       this.#followableIcons.forEach((i) => {
@@ -224,6 +231,9 @@ export class UiController {
       currContainer.append(shipVisual, shipNameText);
 
       currContainer.addEventListener("pointerdown", (e) => {
+        if (e.target.hasPointerCapture(e.pointerId)) {
+          e.target.releasePointerCapture(e.pointerId);
+        }
         this.#selectedShip = currShip;
 
         for (let i = 0; i < currShip.size; i++) {

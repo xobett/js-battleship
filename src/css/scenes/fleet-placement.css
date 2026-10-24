@@ -105,6 +105,8 @@
   align-items: center;
 
   gap: 4px;
+
+  touch-action: none;
 }
 
 .fleet-container .ship.blocked {
@@ -136,6 +138,41 @@
 
   padding: 7px;
 }
+
+svg[data-action="rotate"] {
+  will-change: contents;
+  animation: rotate 4s infinite both ease;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(-180deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+svg[data-action="restart"] {
+  will-change: contents;
+  animation: restart 4s infinite both ease-in;
+}
+
+@keyframes restart {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.8);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 .input-btns-container li {
   border: 1px solid rgba(255, 255, 255, 0.6);
   background-color: rgba(203, 228, 238, 0.24);
@@ -153,4 +190,63 @@
 
 .ship:active {
   cursor: grabbing;
+}
+
+#fleet-placement-scene.active .options-container.mobile,
+#fleet-placement-scene.active .player-info-container.mobile {
+  display: none;
+}
+
+@media (max-width: 760px) {
+  #fleet-placement-scene.active {
+    grid-auto-flow: row;
+    grid-template-columns: 1fr;
+    grid-template-rows: min-content 1fr;
+    padding-inline: 10px;
+  }
+
+  body:has(#fleet-placement-scene.active) {
+    padding-bottom: unset;
+  }
+
+  #fleet-placement-scene .options-advice-container {
+    gap: 0;
+  }
+  .advice-container {
+    padding: 0;
+    font-size: 0.8rem;
+  }
+
+  #fleet-placement-scene .advice-container ul {
+    margin: unset;
+    width: initial;
+  }
+
+  .fleet-container {
+    width: 380px;
+    height: 70px;
+
+    font-size: 0.6rem;
+  }
+
+  #fleet-placement-scene.active .options-container.web,
+  #fleet-placement-scene.active .player-info-container.web {
+    display: none;
+  }
+
+  #fleet-placement-scene.active .options-container.mobile,
+  #fleet-placement-scene.active .player-info-container.mobile {
+    display: flex;
+  }
+
+  #fleet-placement-scene .advice-container .hint-container {
+  }
+
+  #fleet-placement-scene .hint-container .web {
+    display: none;
+  }
+
+  #fleet-placement-scene .placement-container {
+    justify-content: space-evenly;
+  }
 }
