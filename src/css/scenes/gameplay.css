@@ -11,7 +11,7 @@
 .player-container,
 .cpu-container {
   display: flex;
-  justify-content: start;
+  justify-content: space-around;
   align-items: center;
   gap: 30px;
 
