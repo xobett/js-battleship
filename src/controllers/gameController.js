@@ -184,7 +184,7 @@ export class GameController {
 
     this.#updatePlayersShipCount();
     this.#updateGameplayMessage(
-      "Press on any of the enemy's gameboard positions to try and land a hit!",
+      "Start by attacking one of the enemy's positions!",
     );
   }
 

@@ -50,8 +50,9 @@ input {
   border: none;
   border-radius: 4px;
   text-align: center;
-  border: 2px solid rgb(40, 71, 129);
+  border: 2px solid rgb(123, 169, 255);
 
+  background-color: #dce6f1;
   transition: border 0.3s ease;
 }
 

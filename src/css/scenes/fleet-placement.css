@@ -178,6 +178,9 @@ svg[data-action="restart"] {
   background-color: rgba(203, 228, 238, 0.24);
   padding: 7px;
   border-radius: 7px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   transition: all 0.1s ease;
 }
@@ -202,9 +205,13 @@ svg[data-action="restart"] {
     grid-auto-flow: row;
     grid-template-columns: 1fr;
     grid-template-rows: min-content 1fr;
-    padding-inline: 10px;
+    padding: 10px;
 
     overflow: hidden;
+  }
+
+  #fleet-placement-scene .title {
+    font-size: 1.3rem;
   }
 
   body:has(#fleet-placement-scene.active) {
@@ -225,10 +232,11 @@ svg[data-action="restart"] {
   }
 
   .fleet-container {
-    width: 380px;
-    height: 70px;
+    width: 330px;
+    height: 65px;
 
     font-size: 0.6rem;
+    text-align: center;
   }
 
   #fleet-placement-scene.active .options-container.web,
@@ -247,5 +255,11 @@ svg[data-action="restart"] {
 
   #fleet-placement-scene .placement-container {
     justify-content: space-evenly;
+    gap: 5px;
+  }
+
+  .input-btns-container li {
+    width: 35px;
+    height: 35px;
   }
 }

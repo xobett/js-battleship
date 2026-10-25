@@ -78,21 +78,20 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 20px;
+  gap: 30px;
 }
 
 .avatar-customization-container .input-container {
-  margin-top: 10px;
   display: flex;
   flex-direction: column;
   text-align: center;
-  gap: 10px;
 }
 
 .avatar-picker-container {
   display: grid;
-  grid-template-columns: repeat(3, minmax(100px, 130px));
-  gap: 20px;
+  grid-template-columns: repeat(3, 130px);
+  grid-template-rows: repeat(3, 130px);
+  gap: 10px;
 }
 
 .avatar-icon {
@@ -217,6 +216,8 @@
 
 .avatar-icon:has(:not(img)) {
   cursor: no-drop;
+  text-align: center;
+  pointer-events: none;
 }
 
 .avatar-icon img {
@@ -228,7 +229,11 @@
     grid-auto-flow: row;
     grid-template-columns: 1fr;
     grid-template-rows: min-content 1fr;
-    padding-inline: 10px;
+    padding: 10px;
+  }
+
+  #menu-scene .title {
+    font-size: 1.3rem;
   }
 
   body:has(#menu-scene.active) {
@@ -246,5 +251,21 @@
   .options-container.mobile {
     display: flex;
     align-items: center;
+  }
+
+  .avatar-picker-container {
+    grid-template-columns: repeat(3, 100px);
+    grid-template-rows: repeat(3, 100px);
+    gap: 5px;
+  }
+
+  #menu-scene .avatar-customization-container {
+    justify-content: space-evenly;
+    gap: 0px;
+  }
+
+  #menu-scene input {
+    height: 28px;
+    width: 140px;
   }
 }
