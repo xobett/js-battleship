@@ -166,8 +166,8 @@ div.dragging-ship-dot[data-ship="patrolboat"] {
 
 @media (max-width: 760px) {
   .gameboard .dragging-ship-dot.static {
-    width: 22px;
-    height: 22px;
+    width: 15px;
+    height: 15px;
   }
 
   div.dragging-ship-dot {
@@ -175,6 +175,10 @@ div.dragging-ship-dot[data-ship="patrolboat"] {
     height: 30px;
   }
 
+  .fleet-container div.dragging-ship-dot.static {
+    width: 26px;
+    height: 26px;
+  }
   .fleet-container div.dragging-ship-dot.static::before {
     right: -7px;
     top: px;
