@@ -25,7 +25,11 @@ export class MessageModalController {
       this.#footerBtn.addEventListener("click", this.#onClick);
     }
 
-    this.#modal.showModal();
+    try {
+      this.#modal.showModal();
+    } finally {
+      /* empty */
+    }
   }
 
   setClosedBy(value) {
@@ -33,6 +37,10 @@ export class MessageModalController {
   }
 
   close() {
-    this.#modal.close();
+    try {
+      this.#modal.close();
+    } finally {
+      /* empty */
+    }
   }
 }
